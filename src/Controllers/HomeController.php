@@ -9,19 +9,27 @@ use \App\Services\Db\UserService;
 
 class HomeController {
   
-  public $db;
-
-  public function __construct($db){
-    $this->db = $db;
+  private $db;
+  public function __construct($container)
+  {
+      $this->container = $container;
   }
 
-  public function setDb($db){
-    $this->db = $db;
+  public function get(Request $request, Response $response)
+  {
+      $user = new UserService($this->container->db);
+
+      return $response->withJson($user->findOne("id = 1"));
   }
 
-  public function get(Request $request, Response $response){
-    $user = new User();
-    $response->withHeader('Content-type', 'application/json');
-    return $response->withJson($user);
+  public function post(Request $request, Response $response)
+  {
+      // $id = $request->getAttribute('route')->getArgument('id');
+      $this->container->logger->error($request);
+
+      
+      return $response->withJson(["oi" => "tess"]);
   }
+
+
 }

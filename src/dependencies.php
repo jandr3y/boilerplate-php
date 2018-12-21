@@ -14,7 +14,8 @@ $container['db'] = function ($c) {
 
 
 $container['HomeController'] = function ($c) {
-    return HomeController::setDb($c->get('db'));
+    $db = $c->get('db');
+    return new HomeController($db);
 };
 
 // view renderer

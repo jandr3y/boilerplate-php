@@ -1,8 +1,6 @@
 <?php
 namespace App\Controllers;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
 
 use \App\Models\User;
 use \App\Services\Db\UserService;
@@ -10,25 +8,25 @@ use \App\Services\Db\UserService;
 class HomeController {
   
   private $db;
-  public function __construct($container)
+
+  public function __construct($db)
   {
-      $this->container = $container;
+      $this->db = $db;
   }
 
-  public function get(Request $request, Response $response)
+  public function __invoke($request, $response) {}
+
+  public function post($request, $response)
   {
-      $user = new UserService($this->container->db);
+      $body = json_decode($request->getBody());
+      return $response->withJson($body);
+  }
+
+  public function get($request, $response)
+  {
+      $user = new UserService($this->db);
 
       return $response->withJson($user->findOne("id = 1"));
-  }
-
-  public function post(Request $request, Response $response)
-  {
-      // $id = $request->getAttribute('route')->getArgument('id');
-      $this->container->logger->error($request);
-
-      
-      return $response->withJson(["oi" => "tess"]);
   }
 
 

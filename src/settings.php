@@ -18,7 +18,7 @@ return [
         'db' => [
             'host' => 'localhost',
             'user' => 'root',
-            'pass' => '',
+            'pass' => '1234',
             'dbname' => 'slim'
         ]
     ],

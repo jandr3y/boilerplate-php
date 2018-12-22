@@ -19,7 +19,17 @@ class HomeController {
   public function post($request, $response)
   {
       $body = json_decode($request->getBody());
-      return $response->withJson($body);
+      $user = new User();
+      
+      $user->username = $body->username;
+      $user->password = $body->password;
+      $user->name     = $body->name;
+       
+      $userService = new UserService($this->db);
+      
+      $result = $userService->create($user);
+
+      return $response->withJson([ "result" => "doi" ]);
   }
 
   public function get($request, $response)

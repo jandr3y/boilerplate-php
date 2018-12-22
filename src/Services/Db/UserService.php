@@ -1,21 +1,29 @@
 <?php
 namespace App\Services\Db;
 
-class UserService {
+use App\Services\Db\Db;
+use App\Models\User;
 
-  private $db;
-  private $table = 'users';
+class UserService extends Db {
 
   public function __construct($db){
-    $this->db = $db;
-
+    parent::__construct($db, 'users', 'User');
   }
 
-  public function findOne($where){
-    $smtp = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$where}");
+  public function create(User $u){
+    $sql = "insert into users (
+            username,
+            password,
+            name
+            ) VALUES (:username, :password, :name) ";
+    
+    $smtp = $this->db->prepare($sql);
 
-    $smtp->execute();
-    return $smtp->fetchObject('\App\Models\User');
+    $smtp->bindParam(':username', $u->username);
+    $smtp->bindParam(':password', $u->password);
+    $smtp->bindParam(':name', $u->name);
+
+    return $smtp->execute();
   }
 
 

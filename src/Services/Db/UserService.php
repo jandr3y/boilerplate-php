@@ -11,11 +11,10 @@ class UserService extends Db {
   }
 
   public function create(User $u){
-    $sql = "insert into users (
-            username,
-            password,
-            name
-            ) VALUES (:username, :password, :name) ";
+    $sql = "insert into users 
+                (username, password, name ) 
+              VALUES 
+                (:username, :password, :name) ";
     
     $smtp = $this->db->prepare($sql);
 

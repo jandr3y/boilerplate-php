@@ -29,7 +29,7 @@ class HomeController {
       
       $result = $userService->create($user);
 
-      return $response->withJson([ "result" => "doi" ]);
+      return $response->withJson([ "result" => $result ]);
   }
 
   public function get($request, $response)

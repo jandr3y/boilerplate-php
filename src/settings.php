@@ -20,7 +20,8 @@ return [
             'user' => 'root',
             'pass' => '1234',
             'dbname' => 'slim'
-        ]
+        ],
+        "jwtSecret" => "zebra"
     ],
 ];
 

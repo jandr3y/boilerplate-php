@@ -25,5 +25,19 @@ class UserService extends Db {
     return $smtp->execute();
   }
 
+  public function auth(string $username, string $password){
+    $sql = "select * from users where username = :username AND
+                                      password = :password ";
+    
+    $smtp = $this->db->prepare($sql);
+
+    $smtp->bindParam(':username', $username);
+    $smtp->bindParam(':password', $password);
+    $smtp->execute();
+
+    return $smtp->fetchObject("\\App\\Models\\User");
+
+  }
+
 
 }

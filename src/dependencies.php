@@ -1,6 +1,7 @@
 <?php
 
 use \App\Controllers\UserController;
+use \App\Controllers\AuthController;
 // DIC configuration
 
 $container = $app->getContainer();
@@ -18,6 +19,11 @@ $container['db'] = function ($c) {
 $container['UserController'] = function ($c) {
     $db = $c->get('db');
     return new UserController($db);
+};
+
+$container['AuthController'] = function ($c) {
+  $db = $c->get('db');
+  return new AuthController($db, $c['settings']['jwtSecret']);
 };
 
 // view renderer

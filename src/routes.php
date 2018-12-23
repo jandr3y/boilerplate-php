@@ -6,6 +6,8 @@ use \App\Controllers\UserController;
 use \App\Services\Db\UserService;
 
 // Routes
+$app->post('/auth', 'AuthController:auth');
+
 $app->post('/users', 'UserController:post');
 $app->get('/users', 'UserController:list');
 $app->get('/users/{id}', 'UserController:get');

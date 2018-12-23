@@ -44,7 +44,8 @@ class UserController {
       return $response->withJson($user->findOne("id = " . $id));
   }
 
-  public function list($request, $response){
+  public function list($request, $response)
+  {
       $users = (new UserService($this->db))->find();
       return $response->withJson($users);
   }

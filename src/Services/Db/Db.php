@@ -22,4 +22,21 @@ class Db {
     return $smtp->fetchObject($model);
   }
 
+  public function find($where = null, $limit = null){
+    $sql = "select * from {$this->table} ";
+
+    if(isset($where))
+      $sql .= "where {$where} ";
+
+    if(isset($limit))
+      $sql .= "limit {$limit}";
+
+
+      var_dump($sql);
+      $smtp = $this->db->prepare($sql);
+      $smtp->execute();
+
+      return $smtp->fetchAll();
+  }
+
 }

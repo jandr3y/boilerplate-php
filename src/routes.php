@@ -2,12 +2,13 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use \App\Controllers\HomeController;
+use \App\Controllers\UserController;
 use \App\Services\Db\UserService;
 
 // Routes
-$app->get('/', 'HomeController:get');
-$app->post('/d', 'HomeController:post');
+$app->post('/users', 'UserController:post');
+$app->get('/users', 'UserController:list');
+$app->get('/users/{id}', 'UserController:get');
 
 $app->post('/', function(Request $req, Response $res){
   // print($req->getBody());

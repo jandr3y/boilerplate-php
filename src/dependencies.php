@@ -1,6 +1,6 @@
 <?php
 
-use \App\Controllers\HomeController;
+use \App\Controllers\UserController;
 // DIC configuration
 
 $container = $app->getContainer();
@@ -15,9 +15,9 @@ $container['db'] = function ($c) {
 };
 
 
-$container['HomeController'] = function ($c) {
+$container['UserController'] = function ($c) {
     $db = $c->get('db');
-    return new HomeController($db);
+    return new UserController($db);
 };
 
 // view renderer

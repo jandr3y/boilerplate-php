@@ -4,8 +4,9 @@ namespace App\Controllers;
 
 use \App\Models\User;
 use \App\Services\Db\UserService;
+use \App\Services\Validator;
 
-class HomeController {
+class UserController {
   
   private $db;
 
@@ -21,9 +22,13 @@ class HomeController {
       $body = json_decode($request->getBody());
       $user = new User();
       
-      $user->username = $body->username;
-      $user->password = $body->password;
-      $user->name     = $body->name;
+      try {
+        $user->username = $body->username;
+        $user->password = Validator::isStrongPassword($body->password);
+        $user->name     = $body->name;
+      } catch(\Exception $e){
+        return $response->withJson([ "error" => $e->getMessage() ]);
+      }
        
       $userService = new UserService($this->db);
       
@@ -34,9 +39,14 @@ class HomeController {
 
   public function get($request, $response)
   {
+      $id = $request->getAttribute('route')->getArgument('id');
       $user = new UserService($this->db);
+      return $response->withJson($user->findOne("id = " . $id));
+  }
 
-      return $response->withJson($user->findOne("id = 1"));
+  public function list($request, $response){
+      $users = (new UserService($this->db))->find();
+      return $response->withJson($users);
   }
 
 

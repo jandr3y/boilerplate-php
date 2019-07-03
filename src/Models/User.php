@@ -1,16 +1,108 @@
 <?php
 namespace App\Models;
 
-class User {
+/**
+ * Classe Entidade Usuário
+ *
+ * Modelo de usuário
+ *
+ * @package     App
+ * @subpackage  Models
+ * @author      Lucas Jandrey <lucas@jandrey.dev>
+ */
+class User extends Model {
 
-  public $id;
-  public $username;
-  public $name;
-  public $password;
+  protected $id;
+  protected $username;
+  protected $name;
+  protected $password;
 
-  public function __construct(){
+  public static $source = "User";
+
+  public static $table = "users";
+
+  public function __construct()
+  {
 
   }
 
+  /**
+   * Get the value of id
+   */ 
+  public function getId()
+  {
+    return $this->id;
+  }
 
+  /**
+   * Set the value of id
+   *
+   * @return  self
+   */ 
+  public function setId($id)
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of username
+   */ 
+  public function getUsername()
+  {
+    return $this->username;
+  }
+
+  /**
+   * Set the value of username
+   *
+   * @return  self
+   */ 
+  public function setUsername($username)
+  {
+    $this->username = $username;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of name
+   */ 
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  /**
+   * Set the value of name
+   *
+   * @return  self
+   */ 
+  public function setName($name)
+  {
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of password
+   */ 
+  public function getPassword()
+  {
+    return $this->password;
+  }
+
+  /**
+   * Set the value of password
+   *
+   * @return  self
+   */ 
+  public function setPassword($password)
+  {
+    $this->password = $password;
+
+    return $this;
+  }
 }

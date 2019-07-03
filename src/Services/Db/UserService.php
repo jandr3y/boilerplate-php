@@ -6,8 +6,9 @@ use App\Models\User;
 
 class UserService extends Db {
 
-  public function __construct($db){
-    parent::__construct($db, 'users', 'User');
+  public function __construct($db = null, $table = "", $source = "")
+  {
+    parent::__construct($db, $table, $source);
   }
 
   public function create(User $u){

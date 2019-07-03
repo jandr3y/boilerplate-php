@@ -18,7 +18,7 @@ return [
         'db' => [
             'host' => 'localhost',
             'user' => 'root',
-            'pass' => '1234',
+            'pass' => '',
             'dbname' => 'slim'
         ],
         "jwtSecret" => "zebra"

@@ -1,4 +1,4 @@
-# Boilerplate - SlimFramework
+# Boilerplate - PHPAPI
 
 ``` git clone ```
 

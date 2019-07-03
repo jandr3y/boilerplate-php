@@ -8,7 +8,7 @@ use \Firebase\JWT\JWT;
 
 use \App\Services\Db\UserService;
 
-class AuthController {
+class AuthController extends BaseController {
   
   private $db;
 

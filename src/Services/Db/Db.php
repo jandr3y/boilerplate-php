@@ -31,55 +31,86 @@ class Db {
   /**
    * Busca apenas um registro
    * 
-   * @param string $where | Condição adicional
+   * @param Array $where | Condição adicional
    * @return stdClass Objeto buscado
    */
-	public function findOne($where = ""){
+	public function findOne(Array $where = []){
 
-		// TODO: WHERE and Params with BindValue
+    $where = $this->getWhereCondition( $where );
+
+    try {
+
+      $smtp = $this->db->prepare("SELECT * FROM {$this->table} {$where->query}");
+      
+      $smtp->execute( $where->params );
+      
+      $model = "\\App\\Models\\";
+      
+      $model .= $this->model;
+      
+      return $smtp->fetchObject($model);
     
-    $smtp = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$where}");
-		
-		$smtp->execute();
-		
-		$model = "\\App\\Models\\";
-		
-		$model .= $this->model;
-		
-		return $smtp->fetchObject($model);
+    }catch( \PDOException $e ){
+
+      return $e->getMessage();
+
+    }
 		
 	}
   
   /**
    * Busca varios registros
    * 
-   * @param string $where | Condição adicional
-   * @param string $limit | Limitador de busca
+   * @param Array $where | Condição adicional
+   * @param int $limit | Limitador de busca
    * @return stdClass Objeto buscado
    */
-	public function find($where = null, $limit = null){
+	public function find(Array $where = [], $limit = null){
     
-    // TODO: WHERE and Params with BindValue
+    $where = $this->getWhereCondition( $where );
     
-		$sql = "select * from {$this->table} ";
+		$sql = "select * from {$this->table} {$where->query}";
 		
-		if(isset($where))
-		$sql .= "where {$where} ";
 		
 		if(isset($limit))
 		$sql .= "limit {$limit}";
 		
 		$smtp = $this->db->prepare($sql);
 		
-		$smtp->execute();
+		$smtp->execute( $where->params );
 		
 		return $smtp->fetchAll();
 		
 	}
-	
+  
+  /**
+   * Salva um objeto qualquer
+   * 
+   * @param string $where | Condição adicional
+   * @return stdClass Objeto buscado
+   */
 	public function save()
 	{
 		
 	}
-	
+  
+  
+  private function getWhereCondition( Array $where )
+  {
+    if( count( $where ) < 1 ){
+      return (object) [ "query" => "", "params" => [] ];
+    }
+
+    $params = [];
+
+    $where_query = " WHERE 1=1 AND " . $where[0];
+
+    if ( count( $where[1] ) > 0 ) {
+      foreach( $where[1] as $column => $value ){
+        $params[":" . $column] = $value;
+      }
+    }
+    
+    return (object) [ "query" => $where_query, "params" => $params ];
+  }
 }

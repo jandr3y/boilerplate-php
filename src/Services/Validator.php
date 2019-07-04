@@ -13,7 +13,7 @@ class Validator {
    * @return string Senha encriptada
    * @throws Exception Pode lançar uma exceção com a mensagem de erro
    */
-  public static function isStrongPassword(string $password)
+  public static function isStrongPassword( $password )
   {
     if (strlen($password) >= 6){
       if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $password)){
@@ -37,12 +37,30 @@ class Validator {
    * @return string Retorna usuário se for valido
    * @throws Exception Pode lançar uma exceção com a mensagem de erro
    */
-  public static function isUsername(string $username)
+  public static function isUsername( $username )
   {
     if ( preg_match('/^[a-z\d_]{4,20}$/i', $username) ) {
       return $username;
     }else{
       throw new \Exception("Nome de usuário deve conter apenas números e letras");
+    }
+  }
+
+  public static function minLength( $value, int $size, string $field_name = "campo" )
+  {
+    if ( strlen( $value ) <= $size ) {
+      throw new \Exception("O campo {$field_name} deve conter no mínimo {$size} caracteres");
+    }else{
+      return $value; 
+    }
+  }
+
+  public static function maxLength( $value, int $size, string $field_name = "campo" )
+  {
+    if ( strlen( $value ) > $size ) {
+      throw new \Exception("O campo {$field_name} deve conter no maximo {$size} caracteres");
+    }else{
+      return $value; 
     }
   }
 

@@ -16,25 +16,11 @@ $container['db'] = function ($c) {
 };
 
 
-$container['UserController'] = function ($c) {
-    $db = $c->get('db');
-    return new UserController($db);
-};
-
-$container['AuthController'] = function ($c) {
-  $db = $c->get('db');
-  return new AuthController($db, $c['settings']['jwtSecret']);
-};
-
 // view renderer
 $container['renderer'] = function ($c) {
     $settings = $c->get('settings')['renderer'];
     return new Slim\Views\PhpRenderer($settings['template_path']);
 };
-
-
-
-
 
 // monolog
 $container['logger'] = function ($c) {
@@ -43,4 +29,15 @@ $container['logger'] = function ($c) {
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
     return $logger;
+};
+
+
+$container['UserController'] = function ($c) {
+    $db = $c->get('db');
+    return new UserController($db);
+};
+
+$container['AuthController'] = function ($c) {
+  $db = $c->get('db');
+  return new AuthController($db, $c['settings']['jwtSecret']);
 };

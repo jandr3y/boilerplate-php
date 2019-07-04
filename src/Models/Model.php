@@ -13,13 +13,15 @@ namespace App\Models;
  */
 class Model {
 
+  private $stackMessages = [];
+
   /**
    * Retorna classe de serviço
    * 
    * @param PDO $db Conexão com o banco de dados
    * @return stdClass|bool Objeto Service do Modelo ou se não conseguir a referencia false.
    */
-  public static function getDAO( PDO $db )
+  public static function getDAO( \PDO $db )
   {
     if ( isset( static::$source ) ) {
 
@@ -39,6 +41,47 @@ class Model {
   public function toArray(){
     return get_object_vars($this);
   }
+
+  public function create( \PDO $db )
+  {
+
+    $object_vars = get_object_vars( $this );
+    
+    $columns      = [];
+    $values       = [];
+    $bind_values  = [];
+
+    foreach( $object_vars as $key => $value ){
+      
+      if ( $key === "id" || $key === "stackMessages" ) continue;
+
+      // create fields to insert
+      $columns[] = $key;
+
+      $values[]  = ":" . $key;
+
+      $bind_values[":" . $key] = $value;
+
+    }
+    
+    $columns = implode( ",", $columns );
+    $values  = implode( ",", $values );
+    
+    $query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$values})";
+    
+    try {
+      
+      $smtp = $db->prepare( $query );
+
+      return $smtp->execute( $bind_values );
+
+    }catch( \PDOException $e ){
+      throw new \Exception( $e->getMessage() );
+    }
+
+    
+  }
+
 
 }
 

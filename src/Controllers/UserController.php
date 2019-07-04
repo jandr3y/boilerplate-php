@@ -2,7 +2,6 @@
 namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface;
-
 use Psr\Http\Message\ResponseInterface;
 
 use \App\Models\User;
@@ -21,39 +20,47 @@ use \App\Services\Validator;
 class UserController extends BaseController {
 	
 	/**
-   * GET /users/{id} 
+   * POST /users 
    * 
-   * Busca somente um usuário com base no id
+   * Cria um usuário
    * @return User
    */
 	public function post(ServerRequestInterface $request, ResponseInterface $response)
 	{
 		
-		$body = json_decode($request->getBody());
+		$body = json_decode( $request->getBody() );
 		
 		$user = new User();
 		
 		try {
 		
-			$user->setUsername( Validator::isUsername( $body->username ) );
+			Validator::isUsername( $body->username );
+			Validator::isStrongPassword( $body->password );
+			Validator::minLength( $body->name, 5, 'Nome' );
+			Validator::maxLength( $body->name, 35, 'Nome' );
 			
-			$user->setPassword(  Validator::isStrongPassword( $body->password ) );
-			
-			$user->setName( $body->name );
-			
-		}
-		
-		catch(\Exception $e){
+		}catch(\Exception $e){
 			
 			return $response->withJson([ "error" => $e->getMessage() ]);
 			
 		}
+
+		$user->setPassword( md5( $body->password ) );
+		$user->setName( $body->name );
+		$user->setUsername( $body->username );
 		
-		$userService = new UserService($this->db);
+		try { 
 		
-		$result = $userService->create($user);
+			$user->create( $this->db );
 		
-		return $response->withJson([ "result" => $result ]);
+		}catch( \Exception $e ){
+
+			return $response->withJson([ "error" => $e->getMessage() ]);
+
+		}
+		
+		
+		return $response->withJson([ "message" => "Usuário criado com sucesso" ]);
 		
 	}
 	
@@ -67,16 +74,18 @@ class UserController extends BaseController {
 	public function get(ServerRequestInterface $request, ResponseInterface $response)
 	{
 		
-		$id = $request->getAttribute('route')->getArgument('id');
+		$username = $request->getAttribute('route')->getArgument('username');
 		
-		if ( $id ) {
+		if ( $username ) {
 			
-			$user = User::getDAO($this->db)->findOne(" id = " . $id);
+			$user = User::getDAO($this->db)->findOne([ 
+			  	'username = :username', 
+				[ 'username' => $username ] 
+			]);
 			
 			return $response->withJson( $user->toArray() );
 			
-		}
-		else{
+		}else{
 			
 			return $response->withJson([ "error" => "É preciso passar o ID na rota" ]);
 			
@@ -97,7 +106,10 @@ class UserController extends BaseController {
 		
 		$userDAO = User::getDAO($this->db);
 		
-		$users = $userDAO->find();
+		$users = $userDAO->find([
+			'id > :id',
+			[ 'id' => 1 ]
+		]);
 		
 		if ( is_array( $users ) ) {
 			

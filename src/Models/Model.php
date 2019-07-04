@@ -42,6 +42,13 @@ class Model {
     return get_object_vars($this);
   }
 
+  /**
+   * Salva o objeto atual no banco.
+   * 
+   * @param \PDO conexão com o banco
+   * @return bool True se salvou
+   * @throws \Exception caso tenha algum erro
+   */
   public function create( \PDO $db )
   {
 

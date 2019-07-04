@@ -115,9 +115,7 @@ class UserController extends BaseController {
 			
 			return $response->withJson($users);
 			
-		}
-		
-		else{
+		}else{
 			
 			return $response->withJson([], 404);
 			

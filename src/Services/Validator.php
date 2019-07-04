@@ -46,6 +46,15 @@ class Validator {
     }
   }
 
+  /**
+   * Valida se tem uma quantidade minima de caracteres
+   * 
+   * @param string $valor a ser validado
+   * @param int $size tamanho minimo
+   * @param string $field_name Campo como alias de mensagem de erro
+   * @return string $valor normal
+   * @throws \Exception Mensagem de erro se for menor
+   */
   public static function minLength( $value, int $size, string $field_name = "campo" )
   {
     if ( strlen( $value ) <= $size ) {
@@ -55,6 +64,15 @@ class Validator {
     }
   }
 
+  /**
+   * Valida se tem uma quantidade maxima de caracteres
+   * 
+   * @param string $valor a ser validado
+   * @param int $size tamanho maximo
+   * @param string $field_name Campo como alias de mensagem de erro
+   * @return string $valor normal
+   * @throws \Exception Mensagem de erro se for maior
+   */
   public static function maxLength( $value, int $size, string $field_name = "campo" )
   {
     if ( strlen( $value ) > $size ) {

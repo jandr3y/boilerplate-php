@@ -16,7 +16,9 @@ $app->post('/users', 'UserController:post');
 $app->get('/users', 'UserController:list');
 $app->get('/users/{username}', 'UserController:get');
 
-$app->post('/', function(Request $req, Response $res){
-  // print($req->getBody());
-  $res->withJson(["teste" => "ok"]);
+$app->get('/', function(Request $req, Response $res){
+  return $res->withJson([
+    "name"    => "API BP",
+    "version" => "1.0.1"
+  ]);
 });

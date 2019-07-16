@@ -3,6 +3,7 @@ return [
     'settings' => [
         'displayErrorDetails' => true,
         'addContentLengthHeader' => false, 
+        'determineRouteBeforeAppMiddleware' => true,
         'renderer' => [
             'template_path' => __DIR__ . '/../templates/',
         ],
@@ -22,13 +23,16 @@ return [
         'jwtSecret' => 'zebra',
         'acl' => [
             'public' => [
-                "Users" => [ "post" ]
+                "post" => [ "/users", "/auth" ]
             ],
             'user' => [
-                "Users" => [ "get", "list", "delete" ]
+                "get" => [ 
+                    "/users",
+                    "/users/{username}"
+                ]
             ],
             'admin' => [
-                "Users" => [ "clear" ]
+                "uset" => [ "clear" ]
             ]
         ]
     ],

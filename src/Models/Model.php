@@ -36,10 +36,23 @@ class Model {
   /**
    * Retornar o objeto atual em array
    * 
+   * @param int $hidden se deve ocultar campos privados
    * @return Array Objeto estanciado em Array
    */
-  public function toArray(){
-    return get_object_vars($this);
+  public function toArray($hidden = true){
+    
+    $object_array = get_object_vars($this);
+    unset($object_array['stackMessages']);
+    
+    if( isset ( static::$hidden ) ){
+      if( is_array( static::$hidden ) && $hidden){
+        foreach ( static::$hidden as $field ){
+          unset($object_array[ $field ]);
+        }
+      }
+    }
+
+    return $object_array;
   }
 
   /**

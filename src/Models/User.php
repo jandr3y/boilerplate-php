@@ -16,10 +16,13 @@ class User extends Model {
   protected $username;
   protected $name;
   protected $password;
+  protected $role;
 
   public static $source = "User";
 
   public static $table = "users";
+
+  public static $hidden = ["password"];
 
   public function __construct()
   {
@@ -102,6 +105,26 @@ class User extends Model {
   public function setPassword($password)
   {
     $this->password = $password;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of role
+   */ 
+  public function getRole()
+  {
+    return $this->role;
+  }
+
+  /**
+   * Set the value of role
+   *
+   * @return  self
+   */ 
+  public function setRole($role)
+  {
+    $this->role = $role;
 
     return $this;
   }

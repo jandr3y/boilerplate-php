@@ -40,11 +40,12 @@ class AuthController extends BaseController {
     ] );
 
 
-    if($user->getId()){
+    if( $user ){
       
       $token = JWT::encode([
         "username"  => $user->getUsername(),
-        "name"      => $user->getName()
+        "name"      => $user->getName(),
+        "role"      => $user->getRole()
       ], $this->secret);
 
       return $res->withJson(["token" => $token ]);

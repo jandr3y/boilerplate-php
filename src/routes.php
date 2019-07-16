@@ -5,9 +5,9 @@ use Slim\Http\Response;
 use \App\Controllers\UserController;
 use \App\Services\Db\UserService;
 use \App\Middlewares\PermissionMiddleware;
-
+$container = $app->getContainer();
 // Middlewares
-$app->add(new PermissionMiddleware());
+$app->add(new PermissionMiddleware($container['settings']['acl'], $container['settings']['jwtSecret']));
 
 // Routes
 $app->post('/auth', 'AuthController:auth');

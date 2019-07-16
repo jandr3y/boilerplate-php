@@ -48,6 +48,7 @@ class UserController extends BaseController {
 		$user->setPassword( md5( $body->password ) );
 		$user->setName( $body->name );
 		$user->setUsername( $body->username );
+		$user->setRole( 1 );
 		
 		try { 
 		
@@ -58,7 +59,6 @@ class UserController extends BaseController {
 			return $response->withJson([ "error" => $e->getMessage() ]);
 
 		}
-		
 		
 		return $response->withJson([ "message" => "Usuário criado com sucesso" ]);
 		
@@ -87,7 +87,7 @@ class UserController extends BaseController {
 			
 		}else{
 			
-			return $response->withJson([ "error" => "É preciso passar o ID na rota" ]);
+			return $response->withJson([ "error" => "É preciso passar o nome de usuário na rota" ]);
 			
 		}
 		

@@ -30,7 +30,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @param array|object|null $requestData the request data
      * @return \Slim\Http\Response
      */
-    public function runApp($requestMethod, $requestUri, $requestData = null)
+    public function runApp($requestMethod, $requestUri, $requestData = null, $requestHeaders = null)
     {
         // Create a mock environment for testing with
         $environment = Environment::mock(
@@ -48,6 +48,10 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $request = $request->withParsedBody($requestData);
         }
 
+        if( isset($requestHeaders) ){
+            $request = $request->withHeader('HTTP_AUTHORIZATION', $requestHeaders); 
+        }
+        
         // Set up a response object
         $response = new Response();
 
@@ -56,21 +60,15 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         // Instantiate the application
         $app = new App($settings);
-
+        
         // Set up dependencies
         require __DIR__ . '/../../src/dependencies.php';
-
-        // Register middleware
-        if ($this->withMiddleware) {
-            require __DIR__ . '/../../src/middleware.php';
-        }
-
         // Register routes
         require __DIR__ . '/../../src/routes.php';
-
+        
         // Process the application
         $response = $app->process($request, $response);
-
+        
         // Return the response
         return $response;
     }

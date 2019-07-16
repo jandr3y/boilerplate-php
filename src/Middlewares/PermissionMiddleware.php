@@ -40,7 +40,7 @@ class PermissionMiddleware {
     // Checa se a rota é publica
     if ( is_array($public) ) {
 
-      $paths = $public[ strtolower($method) ];
+      $paths = (isset($public[ strtolower($method) ])) ? $public[ strtolower($method) ] : null;
       
       if( is_array( $paths ) ){
         
@@ -71,9 +71,6 @@ class PermissionMiddleware {
               if ( $path == $current_path ){
                 return $next($request, $response);
               }
-
-
-              // TODO: Fazer a parte de  permissão de rotas 
             }
           break;
           case 2:

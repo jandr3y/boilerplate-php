@@ -37,16 +37,11 @@ class UserController extends BaseController {
 		
 		try {
 			
-			Validator::isUsername( $body->username );
+			Validator::validate( $body->username, 'Usuário')->required()->isUsername();
+			Validator::validate( $body->password, 'Senha' )->required()->isStrongPassword();
+			Validator::validate( $body->name, 'Nome' )->minLength(5)->maxLength(35);
 			
-			Validator::isStrongPassword( $body->password );
-			
-			Validator::minLength( $body->name, 5, 'Nome' );
-			
-			Validator::maxLength( $body->name, 35, 'Nome' );
-			
-		}
-		catch(\Exception $e){
+		}catch(\Exception $e){
 			
 			return $response->withJson([ "error" => $e->getMessage() ], 400);
 			
@@ -146,8 +141,7 @@ class UserController extends BaseController {
 	public function delete(ServerRequestInterface $request, ResponseInterface $response)
 	{
 		
-		$id = $request->getAttribute('route')->getArgument('id');
-		
+		$id = $request->getAttribute('route')->getArgument('id');	
 		$current_user = $request->getAttribute('current_user');
 		
 		$id = intval( $id );
@@ -182,6 +176,40 @@ class UserController extends BaseController {
 			
 		}
 		
+	}
+
+	public function update(ServerRequestInterface $request, ResponseInterface $response)
+	{
+		// Busca o ID vindo da URL
+		$id = $request->getAttribute('route')->getArgument('id');
+		// Busca o usuário informado pelo Token
+		$current_user = $request->getAttribute('current_user');
+
+		$body = json_decode( $request->getBody() );
+
+		if ( $id !== intval( $current_user->id ) ){
+			return $response->withJson([ 'error' => 'Você não pode atualizar outro usuário' ]);
+		}
+
+		$userDAO = User::getDAO( $this->db );
+
+		$user = $userDAO->findOne([
+			'id = :id',
+			[
+				'id' => $id
+			]
+		]);
+
+		// TODO: o resto
+
+		if ( $user ) {
+
+
+
+		}
+
+
+
 	}
 	
 }

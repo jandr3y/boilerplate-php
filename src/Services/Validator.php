@@ -4,6 +4,48 @@ namespace App\Services;
 
 class Validator {
 
+  public static function validate( $value, $alias = '' )
+  {
+    $validatorInterface = new ValidatorInterface( $value, $alias );
+    return $validatorInterface;
+  }
+
+}
+
+class ValidatorInterface {
+
+  /**
+   * @var mixed
+   */
+  private $value;
+
+  /**
+   * @var string
+   */
+  private $alias;
+
+  public function __construct( $value , $args )
+  {
+    $this->value = $value;
+    $this->alias = $alias;
+  }
+
+  public function __call($name, $arguments)
+  {
+    var_dump($name); die();
+    if(method_exists($this, $name)) {
+      if ( $name != 'required' ) {
+        var_dump($this->value); die();
+        if ( ! isset( $this->value ) || empty( $this->value ) || trim( $this->value ) == '' ) {
+          var_dump("EHE"); die();
+          return $this;
+        }else{
+          return $this->$name( ...$arg );;
+        }
+      }
+    }
+  }
+
   /**
    * Valida se é uma senha forte
    *  - Deve conter caracteres especiais
@@ -13,11 +55,11 @@ class Validator {
    * @return string Senha encriptada
    * @throws Exception Pode lançar uma exceção com a mensagem de erro
    */
-  public static function isStrongPassword( $password )
+  public function isStrongPassword()
   {
-    if (strlen($password) >= 6){
-      if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $password)){
-        return md5($password);
+    if (strlen($this->value) >= 6){
+      if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $this->value)){
+        return $this;
       }else{
         throw new \Exception("Senha deve conter caracteres especiais [@, $, &...]");
       }
@@ -37,10 +79,10 @@ class Validator {
    * @return string Retorna usuário se for valido
    * @throws Exception Pode lançar uma exceção com a mensagem de erro
    */
-  public static function isUsername( $username )
+  public function isUsername()
   {
-    if ( preg_match('/^[a-z\d_]{4,20}$/i', $username) ) {
-      return $username;
+    if ( preg_match('/^[a-z\d_]{4,20}$/i', $this->value) ) {
+      return $this->value;
     }else{
       throw new \Exception("Nome de usuário deve conter apenas números e letras");
     }
@@ -49,36 +91,42 @@ class Validator {
   /**
    * Valida se tem uma quantidade minima de caracteres
    * 
-   * @param string $valor a ser validado
    * @param int $size tamanho minimo
-   * @param string $field_name Campo como alias de mensagem de erro
-   * @return string $valor normal
    * @throws \Exception Mensagem de erro se for menor
    */
-  public static function minLength( $value, int $size, string $field_name = "campo" )
+  public function minLength( int $size )
   {
-    if ( strlen( $value ) <= $size ) {
-      throw new \Exception("O campo {$field_name} deve conter no mínimo {$size} caracteres");
+    if ( strlen( $this->value ) <= $size ) {
+      throw new \Exception("O campo {$this->alias} deve conter no mínimo {$size} caracteres");
     }else{
-      return $value; 
+      return $this; 
     }
   }
 
   /**
    * Valida se tem uma quantidade maxima de caracteres
    * 
-   * @param string $valor a ser validado
    * @param int $size tamanho maximo
-   * @param string $field_name Campo como alias de mensagem de erro
-   * @return string $valor normal
    * @throws \Exception Mensagem de erro se for maior
    */
-  public static function maxLength( $value, int $size, string $field_name = "campo" )
+  public function maxLength( int $size )
   {
-    if ( strlen( $value ) > $size ) {
-      throw new \Exception("O campo {$field_name} deve conter no maximo {$size} caracteres");
+    if ( strlen( $this->value ) > $size ) {
+      throw new \Exception("O campo {$this->alias} deve conter no maximo {$size} caracteres");
     }else{
       return $value; 
+    }
+  }
+
+  /**
+   * Valida se a informação esta vazia
+   */
+  public function required()
+  {
+    if ( ! isset( $this->value ) || empty( $this->value ) || trim( $this->value ) == '' ) {
+      throw new \Exception("O campo {$this->alias} não pode ficar vazio");
+    }else{
+      return $this;
     }
   }
 

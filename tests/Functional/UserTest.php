@@ -4,9 +4,7 @@ namespace Tests\Functional;
 
 class UserTest extends BaseTestCase
 {
-    /**
-     * Test that the index route returns a rendered response containing the text 'SlimFramework' but not a greeting
-     */
+
     public function testListarUsuarioSemToken()
     {
         $response = $this->runApp('GET', '/users');
@@ -22,6 +20,31 @@ class UserTest extends BaseTestCase
       );
 
       $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testCriarUsuarioSemInformacoes()
+    {
+        $data = [ 'username' => '@##' ];
+        $response = $this->runApp('POST', '/users', $data);
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $data['username'] = 'luacksss';
+        $data['password'] = 'test123';
+        $response = $this->runApp('POST', '/users', $data);
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $data['password'] = 'test1234@';
+        $data['name'] = 'Lucs';
+        $response = $this->runApp('POST', '/users', $data);
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $data['name'] = 'Lucass Jandreeeeeeeeeeeeeey andnrnannananannrna nrnarn rnanrnarnarnnarnrnanrna nrnarn';
+        $response = $this->runApp('POST', '/users', $data);
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $data['name'] = 'Lucas Jandrey';
+        $response = $this->runApp('POST', '/users', $data);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
 }

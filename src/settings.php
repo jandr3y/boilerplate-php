@@ -23,12 +23,18 @@ return [
         'jwtSecret' => 'zebra',
         'acl' => [
             'public' => [
-                "post" => [ "/users", "/auth" ]
+                "post" => [ 
+                    "/users", 
+                    "/auth" 
+                ]
             ],
             'user' => [
                 "get" => [ 
                     "/users",
                     "/users/{username}"
+                ],
+                "delete" => [
+                    "/users/{id}"
                 ]
             ],
             'admin' => [

@@ -45,13 +45,14 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         // Add request data, if it exists
         if (isset($requestData)) {
-            $request = $request->withParsedBody($requestData);
+            $request = $request->withParsedBody( $requestData );
         }
 
         if( isset($requestHeaders) ){
             $request = $request->withHeader('HTTP_AUTHORIZATION', $requestHeaders); 
         }
         
+        $request = $request->withHeader('Content-Type', 'application/json'); 
         // Set up a response object
         $response = new Response();
 

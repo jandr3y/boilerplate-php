@@ -62,6 +62,8 @@ class PermissionMiddleware {
         return $response->withJson([ 'error' => 'Você não tem permissão para acessar esta rota' ], 403);  
       }
 
+      $request = $request->withAttribute('current_user', $user_token);
+
       if( isset($user_token->role) ){
         switch( $user_token->role ){
           case 1: 

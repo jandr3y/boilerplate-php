@@ -56,7 +56,7 @@ class Db {
 
     }
 		
-	}
+  }
   
   /**
    * Busca varios registros
@@ -112,5 +112,24 @@ class Db {
     }
     
     return (object) [ "query" => $where_query, "params" => $params ];
+  }
+
+  public function delete( Array $where )
+  {
+    $where = $this->getWhereCondition( $where );
+
+    $query = "DELETE FROM {$this->table} " . $where->query . PHP_EOL;
+
+    try {
+      
+      $smtp = $this->db->prepare( $query );
+      return $smtp->execute( $where->params );
+
+    }catch( \PDOException $e ){
+      // TODO: Log
+      var_dump($e->getMessage()); die();
+      return false;
+    }
+
   }
 }

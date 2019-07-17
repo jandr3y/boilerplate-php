@@ -15,6 +15,8 @@ $app->post('/auth', 'AuthController:auth');
 $app->post('/users', 'UserController:post');
 $app->get('/users', 'UserController:list');
 $app->get('/users/{username}', 'UserController:get');
+$app->delete('/users/{id}', 'UserController:delete');
+
 
 $app->get('/', function(Request $req, Response $res){
   return $res->withJson([

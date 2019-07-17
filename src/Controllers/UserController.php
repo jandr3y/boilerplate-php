@@ -204,11 +204,7 @@ class UserController extends BaseController {
 
 		if ( $user ) {
 
-
-
 		}
-
-
 
 	}
 	

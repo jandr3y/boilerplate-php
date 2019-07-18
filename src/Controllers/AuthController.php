@@ -29,7 +29,7 @@ class AuthController extends BaseController {
   {
     $userDAO = User::getDAO( $this->db );
 
-    $body = json_decode($req->getBody());
+    $body = (object) json_decode($req->getBody());
 
     $user = $userDAO->findOne( [
       " username = :username AND password = :password ",
@@ -52,7 +52,7 @@ class AuthController extends BaseController {
       return $res->withJson(["token" => $token ]);
     
     }else{
-      return $res->withJson(["error" => "Usuário ou senha incorretos" ]);
+      return $res->withJson(["error" => "Usuário ou senha incorretos" ], 403);
     }
   }
 

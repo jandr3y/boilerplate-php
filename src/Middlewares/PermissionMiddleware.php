@@ -44,7 +44,11 @@ class PermissionMiddleware {
 		$admin  = $this->controlList['admin'];
 		
 		$current_path = $request->getAttribute('route')->getPattern();
-		
+
+		if ( $request->getAttribute('route') ) {
+			
+		}
+
 		$method = $request->getMethod();
 		
 		// 		Checa se a rota é publica

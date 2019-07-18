@@ -13,6 +13,9 @@ session_start();
 
 
 $settings = require __DIR__ . '/../src/settings.php';
+
+define('_DEV_', $settings['settings']['dev']);
+
 $app = new \Slim\App($settings);
 
 

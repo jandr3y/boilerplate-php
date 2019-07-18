@@ -2,6 +2,7 @@
 
 use \App\Controllers\UserController;
 use \App\Controllers\AuthController;
+use \App\Controllers\AdminController;
 // DIC configuration
 
 $container = $app->getContainer();
@@ -41,3 +42,8 @@ $container['AuthController'] = function ($c) {
   $db = $c->get('db');
   return new AuthController($db, $c['settings']['jwtSecret']);
 };
+
+$container['AdminController'] = function ($c) {
+    $db = $c->get('db');
+    return new AdminController($db, $c['settings']['jwtSecret'], $c->get('renderer'));
+  };

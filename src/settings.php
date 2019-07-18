@@ -1,6 +1,7 @@
 <?php
 return [
     'settings' => [
+        'dev' => true,
         'displayErrorDetails' => true,
         'addContentLengthHeader' => false, 
         'determineRouteBeforeAppMiddleware' => true,
@@ -25,7 +26,10 @@ return [
             'public' => [
                 "post" => [ 
                     "/users", 
-                    "/auth" 
+                    "/auth"
+                ],
+                "get" => [
+                    "/admin"
                 ]
             ],
             'user' => [
@@ -38,7 +42,10 @@ return [
                 ]
             ],
             'admin' => [
-                "uset" => [ "clear" ]
+                "get" => [ 
+                    "/admin/home",
+                    "/admin/{model}"
+                ]
             ]
         ]
     ],

@@ -2,7 +2,6 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use \App\Controllers\UserController;
 use \App\Services\Db\UserService;
 use \App\Middlewares\PermissionMiddleware;
 $container = $app->getContainer();
@@ -17,6 +16,10 @@ $app->get('/users', 'UserController:list');
 $app->get('/users/{username}', 'UserController:get');
 $app->delete('/users/{id}', 'UserController:delete');
 
+
+$app->get('/admin', 'AdminController:index'); 
+$app->get('/admin/home', 'AdminController:home');
+$app->get('/admin/{model}', 'AdminController:model'); 
 
 $app->get('/', function(Request $req, Response $res){
   return $res->withJson([

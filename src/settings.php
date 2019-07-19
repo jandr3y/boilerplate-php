@@ -26,7 +26,7 @@ return [
             'public' => [
                 "post" => [ 
                     "/users", 
-                    "/auth"
+                    "/auth",
                 ],
                 "get" => [
                     "/admin"

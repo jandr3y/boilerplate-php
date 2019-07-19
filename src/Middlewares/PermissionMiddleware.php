@@ -34,6 +34,10 @@ class PermissionMiddleware {
 	public function __invoke( ServerRequestInterface $request, ResponseInterface $response, callable $next )
 	{
 		
+		if ( strpos( $_SERVER['REQUEST_URI'], 'admin' ) ) {
+			return $next($request, $response);
+		}
+
 		$headers = $request->getHeaders();
 		
 		// 		array de rotas
@@ -42,12 +46,8 @@ class PermissionMiddleware {
 		$user   = $this->controlList['user'];
 		
 		$admin  = $this->controlList['admin'];
-		
-		$current_path = $request->getAttribute('route')->getPattern();
 
-		if ( $request->getAttribute('route') ) {
-			
-		}
+		$current_path = $request->getAttribute('route')->getPattern();
 
 		$method = $request->getMethod();
 		

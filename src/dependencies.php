@@ -2,7 +2,7 @@
 
 use \App\Controllers\UserController;
 use \App\Controllers\AuthController;
-use \App\Controllers\AdminController;
+use \App\Admin\Controllers\AdminController;
 // DIC configuration
 
 $container = $app->getContainer();

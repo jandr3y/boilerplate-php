@@ -4,13 +4,13 @@
   <div class="card">
     <article class="card-body">
       <h4 class="card-title mb-4 mt-1">Painel</h4>
-      <form id="form-login">
+      <form id="form-login" method="POST" action="/admin/auth">
         <div class="form-group">
           <label>Usuário / Email</label>
           <input name="username" class="form-control" placeholder="Email" type="text">
         </div> <!-- form-group// -->
         <div class="form-group">
-          <a class="float-right" href="#">Esqueceu?</a>
+          
           <label>Senha</label>
           <input class="form-control" name="password" placeholder="******" type="password">
         </div> <!-- form-group// -->
@@ -22,7 +22,9 @@
       </form>
     </article>
   </div> <!-- card.// -->
-  <?php require_once( __DIR__ . '/parts/messages.phtml' ); ?>
+  <?php if( ! empty($message) ): ?>
+    <?php require_once( __DIR__ . '/parts/messages.phtml' ); ?>
+  <?php endif; ?>
 </aside>
 
 <?php require_once( __DIR__ . '/parts/footer.phtml' ); ?>

@@ -1,1 +1,33 @@
-oi
+<?php require_once( __DIR__ . '/parts/header.phtml' ); ?>
+
+<aside class="col-sm-12 col-md-5" style="margin: 10vh auto;">
+  <div class="card">
+    <article class="card-body">
+      <h4 class="card-title mb-4 mt-1">Painel</h4>
+      <form id="form-login" method="POST" action="/admin/auth">
+        <div class="form-group">
+          <label>Usuário / Email</label>
+          <input name="username" class="form-control" placeholder="Email" type="text">
+        </div> <!-- form-group// -->
+        <div class="form-group">
+          
+          <label>Senha</label>
+          <input class="form-control" name="password" placeholder="******" type="password">
+        </div> <!-- form-group// -->
+        <div class="form-group">
+        </div> <!-- form-group// -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block"> Entrar </button>
+        </div> <!-- form-group// -->
+      </form>
+    </article>
+  </div> <!-- card.// -->
+  <?php if( ! empty($message) ): ?>
+    <?php require_once( __DIR__ . '/parts/messages.phtml' ); ?>
+  <?php endif; ?>
+</aside>
+
+<?php require_once( __DIR__ . '/parts/footer.phtml' ); ?>
+<script>
+  $(document).ready(Admin.index.init);  
+</script>

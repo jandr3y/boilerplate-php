@@ -49,7 +49,7 @@ class AdminController  {
       $data['message'] = $this->errorHandler( $params->error );
     }
 
-    $this->view->render($res, 'index.phtml', $data);
+    $this->view->render($res, 'login.phtml', $data);
   }
 
   /** 
@@ -62,6 +62,8 @@ class AdminController  {
     if ( empty( $_SESSION['user_id'] ) ) {
       return $res->withRedirect('/admin/login');
     }
+
+    $this->view->render($res, 'index.phtml');
   }
 
   /**

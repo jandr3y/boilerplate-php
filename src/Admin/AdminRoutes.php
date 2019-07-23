@@ -13,7 +13,9 @@ class AdminRoutes {
     
 
     $app->post('/admin/auth', 'AdminController:auth'); 
-    $app->get('/admin/login', 'AdminController:login'); 
+    $app->get('/admin/login', 'AdminController:login');
+    $app->get('/admin/manage/{model}', 'AdminController:list'); 
+    $app->get('/admin/logout', 'AdminController:logout'); 
     $app->get('/admin', 'AdminController:home'); 
   }
 }

@@ -27,5 +27,44 @@ const Admin = {
       // $("#form-login").submit((e) => Admin.index.submit(e));
       setTimeout(() => $("#msg-error").slideUp(), 3521);
     }
+  },
+  manage: {
+    enableCommit: (rowID) => {
+      let row = document.getElementById(rowID);
+      row.querySelector("#save").disabled = false;
+      // row.getElementById("save").disabled = false;
+    },
+    /** Cancela todos os campos de edição */
+    cancelEdit: (e) => {
+      let row = e.path[2];
+      let childs = Array.from(row.childNodes).filter( element => typeof element.localName !== 'undefined' && element.localName == 'td' )
+      
+      childs.forEach( cell => {
+        if ( typeof cell.firstChild.value !== 'undefined' ){
+          e.target.removeEventListener('focusout', Admin.manage.cancelEdit);
+          cell.innerHTML = cell.firstChild.value;
+        }
+      })
+
+      Admin.manage.enableCommit( row.id );
+    },
+    editField: (field, value, cellID) => {
+      if ( field != 'id' ) {
+        let cell = document.getElementById(cellID);
+        let textField = document.createElement("input");
+        
+        textField.setAttribute('type', 'text');
+        textField.setAttribute('placeholder', field);
+        textField.classList.add('form-control');
+        textField.value = value;
+        textField.addEventListener('focusout', Admin.manage.cancelEdit)
+        
+        cell.innerHTML = '';
+        cell.appendChild(textField);
+        // $(`#list-data #${cellID}`).html(textField);
+        // console.log(field);
+        // console.log(value)
+      }
+    }
   }
 }

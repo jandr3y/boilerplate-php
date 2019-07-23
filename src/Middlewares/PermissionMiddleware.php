@@ -40,7 +40,7 @@ class PermissionMiddleware {
 
 		$headers = $request->getHeaders();
 		
-		// 		array de rotas
+		// array de rotas
 		$public = $this->controlList['public'];
 		
 		$user   = $this->controlList['user'];

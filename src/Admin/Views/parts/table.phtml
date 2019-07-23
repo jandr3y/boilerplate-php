@@ -1,0 +1,25 @@
+<table class="table" id="list-data">
+  <thead>
+    <tr>
+    <?php foreach( $modelArray as $key => $value ): ?>
+      <th scope="col"><?= ucfirst( $key ) ?></th>
+    <?php endforeach; ?> 
+    <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php foreach( $table as $rowID => $row ): ?>
+    <tr id="<?= $rowID ?>">
+      <?php foreach( $modelArray as $key => $value ): ?>
+      <td id="<?= $rowID ?>-<?= $key ?>" ondblclick="Admin.manage.editField('<?= $key ?>', '<?= $row[$key] ?>', '<?= $rowID ?>-<?= $key ?>')">
+        <?= $row[$key] ?>
+      </td>
+      <?php endforeach; ?> 
+      <td> 
+        <button type="button" class="btn btn-danger">Deletar</button>
+        <button type="button" class="btn btn-primary" id="save" disabled>Salvar</button> 
+      </td>
+    </tr>
+  <?php endforeach; ?>
+  </tbody>
+</table>

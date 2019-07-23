@@ -21,6 +21,32 @@ class AdminController  {
   }
 
   /**
+   * Busca os modelos disponiveis.
+   */
+  private function getModelFiles()
+  {
+    $files = scandir(__DIR__ . '/../../Models');
+    
+    if ( is_array( $files ) ){
+      foreach( $files as $key => $file ) {
+        if ( strpos($file, 'php') > 0 ){
+          $files[ $key ] = explode(".", $file)[0];
+        } else {
+          unset( $files[ $key ] );
+        }
+      }
+    }
+
+    return array_filter( $files, function( $file ) {
+      if ( $file != 'Model' ) {
+        return true;
+      }else{
+        return false;
+      }
+    });
+  }
+
+  /**
    * Faz a trataiva do erro
    * 
    * @param string $type tipo do erro
@@ -63,7 +89,44 @@ class AdminController  {
       return $res->withRedirect('/admin/login');
     }
 
-    $this->view->render($res, 'index.phtml');
+    $data = [
+      'models' => $this->getModelFiles()
+    ];
+    
+
+    $this->view->render($res, 'index.phtml', $data);
+  }
+
+  /**
+   * Desloga do Painel Adminitrador
+   */
+  public function logout(ServerRequestInterface $req, ResponseInterface $res)
+  {
+    session_destroy();
+    return $res->withRedirect('/admin/login');
+  }
+
+  public function list(ServerRequestInterface $req, ResponseInterface $res)
+  {
+    if ( empty( $_SESSION['user_id'] ) ) {
+      return $res->withRedirect('/admin/login');
+    }
+
+    $modelName = $req->getAttribute('model');
+    $modelPath = "\App\Models\\" . ucfirst( $modelName );  
+    $model = new $modelPath();
+    $dao = $model->getDAO( $this->db );
+
+    $list = $dao->find();
+
+    $data = [
+      'models' => $this->getModelFiles(),
+      'model' => $modelName,
+      'modelArray' => $model->toArray(false),
+      'table' => $list
+    ];
+
+    $this->view->render($res, 'manage.phtml', $data);
   }
 
   /**

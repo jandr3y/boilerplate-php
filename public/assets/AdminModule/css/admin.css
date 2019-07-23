@@ -1,3 +1,7 @@
 body {
-  background: #eee;
+  background: white;
+}
+
+.sidebar {
+  height: calc(100vh - 40px);
 }

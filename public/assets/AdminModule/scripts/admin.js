@@ -24,7 +24,6 @@ const Admin = {
      *  Inicia tela de login
      */
     init: () => {
-      // $("#form-login").submit((e) => Admin.index.submit(e));
       setTimeout(() => $("#msg-error").slideUp(), 3521);
     }
   },
@@ -32,7 +31,6 @@ const Admin = {
     enableCommit: (rowID) => {
       let row = document.getElementById(rowID);
       row.querySelector("#save").disabled = false;
-      // row.getElementById("save").disabled = false;
     },
     /** Cancela todos os campos de edição */
     cancelEdit: (e) => {
@@ -51,6 +49,7 @@ const Admin = {
     editField: (field, value, cellID) => {
       if ( field != 'id' ) {
         let cell = document.getElementById(cellID);
+        
         let textField = document.createElement("input");
         
         textField.setAttribute('type', 'text');
@@ -61,9 +60,7 @@ const Admin = {
         
         cell.innerHTML = '';
         cell.appendChild(textField);
-        // $(`#list-data #${cellID}`).html(textField);
-        // console.log(field);
-        // console.log(value)
+        textField.focus();
       }
     }
   }

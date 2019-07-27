@@ -83,18 +83,6 @@ class Db {
 		
 	}
   
-  /**
-   * Salva um objeto qualquer
-   * 
-   * @param string $where | Condição adicional
-   * @return stdClass Objeto buscado
-   */
-	public function save()
-	{
-		
-	}
-  
-  
   private function getWhereCondition( Array $where )
   {
     if( count( $where ) < 1 ){

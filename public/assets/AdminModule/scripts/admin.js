@@ -28,11 +28,24 @@ const Admin = {
     }
   },
   manage: {
+    commit: (event) => {
+      
+    },
+    /**
+     * Habilita o botão de salvar
+     */
     enableCommit: (rowID) => {
       let row = document.getElementById(rowID);
-      row.querySelector("#save").disabled = false;
+      let button = row.querySelector("#save");
+      
+      button.addEventListener('click', commit)
+      
+      button.disabled = false;
+
     },
-    /** Cancela todos os campos de edição */
+    /** 
+     * Cancela todos os campos de edição 
+     */
     cancelEdit: (e) => {
       let row = e.path[2];
       let childs = Array.from(row.childNodes).filter( element => typeof element.localName !== 'undefined' && element.localName == 'td' )
@@ -46,6 +59,9 @@ const Admin = {
 
       Admin.manage.enableCommit( row.id );
     },
+    /**
+     * Inicia uma nova edição de um campo
+     */
     editField: (field, value, cellID) => {
       if ( field != 'id' ) {
         let cell = document.getElementById(cellID);

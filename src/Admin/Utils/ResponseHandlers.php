@@ -21,6 +21,9 @@ class ResponseHandlers {
       case 'MODEL_NOT_FOUND':
         return $response->withJson([ 'error' => 'Modelo a ser editado não foi encontrado' ], 400);
         break;
+      case 'UPDATE_ERROR':
+        return $response->withJson([ 'error' => 'Houve um erro ao atualizar modelo' ], 400);
+        break;
       case 'CUSTOM':
       
       break;

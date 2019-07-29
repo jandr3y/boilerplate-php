@@ -96,6 +96,35 @@ class CrudController {
 
   }
 
+  /** 
+   * DELETE /admin/crud/{model}
+   * 
+   * Delete um modelo com base no seu campo identificador
+   */
+  public function delete( ServerRequestInterface $request, ResponseInterface $response )
+  {
+
+    if ( ! $this->mountObjects( $request->getAttribute('model') ) ){
+      return ResponseHandlers::error($response, 'BAD_MODEL');
+    }
+
+    $body = (object) $request->getParsedBody();
+    $identifier_key = $this->blank_model::$primary;
+
+    if ( ! empty( $body->$identifier_key ) ){
+      $method_name = 'set' . ucfirst( $identifier_key ); 
+      $this->blank_model->$method_name( $body->$identifier_key );
+
+      if( $this->blank_model->delete( $this->db ) ){
+        return $response->withJson([ 'message' => 'Registro deletado com sucesso' ], 200);
+      }else{
+        return ResponseHandlers::error($response, 'DELETE_ERROR');
+      };
+    }else{
+      return ResponseHandlers::error($response, 'NO_IDENTIFIER');
+    }
+  }
+
   /**
    * UPDATE /admin/crud/{model}
    * 
@@ -110,13 +139,14 @@ class CrudController {
 
     $body = (object) $request->getParsedBody();
     $attrs = $this->getBodyAttributes( $body );
+    $identifier_key = $this->blank_model::$primary;
 
-    if ( ! empty( $body->id ) ) {
+    if ( ! empty( $body->$identifier_key ) ) {
       
       // Busca o modelo pelo ID
       $current_model = $this->_dao->findOne([
         "id = :id",
-        [ 'id' => $body->id ]
+        [ 'id' => $body->$identifier_key ]
       ]);
 
       if ( $current_model ){
@@ -128,8 +158,12 @@ class CrudController {
           $current_model->$method_name( $body->$attr );
 
         }    
-
-        var_dump($current_model); die();
+        
+        if ( $current_model->update( $this->db ) ){
+          return $response->withJson([ 'message' => 'Alterações realizadas com sucesso' ], 200);
+        }else{
+          return ResponseHandlers::error($response, 'UPDATE_ERROR');
+        }
 
       }else{
         return ResponseHandlers::error($response, 'MODEL_NOT_FOUND');

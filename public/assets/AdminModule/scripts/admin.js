@@ -6,7 +6,7 @@
  *  Colocar um build do script minificado e uglificado
  */
 const API_URL = "http://localhost:8080";
-const URL = "http://localhost:8080/admin";
+const URL = "http://127.0.0.1:8080/admin";
 const Admin = {
   /**
    * Mostra a mensagem de erro
@@ -28,8 +28,50 @@ const Admin = {
     }
   },
   manage: {
-    commit: (event) => {
+    commit: ( rowID ) => {
+      let body = Admin.manage._mapRowAttributes(rowID);
       
+      $.ajax({
+        url: URL + '/crud/user',
+        method: 'PUT',
+        data: body,
+        success: (data) => {
+          console.log(data);
+        }
+      });
+      
+    },
+    delete: (rowID) => {
+      let body = Admin.manage._mapRowAttributes( rowID );
+
+      $.ajax({
+        url: URL + '/crud/user',
+        method: 'DELETE',
+        data: body,
+        success: (data) => {
+          console.log(data);
+        }
+      });
+
+    },
+    /** 
+     * Cria um objeto com os valores da linha
+     * @param {int} rowID ID da Linha
+     * @return {mixed} Linha em forma de objeto
+     */
+    _mapRowAttributes: (rowID) => {
+      let row = document.getElementById(rowID);
+      let genericObject = {};
+
+      Array.from(row.childNodes).map(element => {
+        if( typeof element.id === 'string' ){
+          if ( typeof element.id.split('-')[1] !== 'undefined' ){
+            genericObject[ element.id.split('-')[1] ] = element.innerText
+          }
+        }
+      })
+      
+      return genericObject;
     },
     /**
      * Habilita o botão de salvar
@@ -38,7 +80,7 @@ const Admin = {
       let row = document.getElementById(rowID);
       let button = row.querySelector("#save");
       
-      button.addEventListener('click', commit)
+      // button.addEventListener('click', commit)
       
       button.disabled = false;
 

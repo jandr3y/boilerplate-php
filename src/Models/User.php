@@ -22,6 +22,8 @@ class User extends Model {
 
   public static $table = "users";
 
+  public static $primary = "id";
+
   public static $hidden = ["password"];
 
   public function __construct()

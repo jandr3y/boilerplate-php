@@ -106,6 +106,11 @@ class AdminController  {
     return $res->withRedirect('/admin/login');
   }
 
+  /**
+   * GET /admin/manage/{model}
+   * 
+   * 
+   */
   public function list(ServerRequestInterface $req, ResponseInterface $res)
   {
     if ( empty( $_SESSION['user_id'] ) ) {

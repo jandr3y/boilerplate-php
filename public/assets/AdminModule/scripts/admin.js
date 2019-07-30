@@ -11,10 +11,12 @@ const Admin = {
   /**
    * Mostra a mensagem de erro
    */
-  errorHandler: ( error ) => {
-    $("#msg-error").html( error.responseJSON.error )
-    $("#msg-error").slideDown();
-    setTimeout(() => $("#msg-error").slideUp(), 3521);
+  hiddenError: ( ) => {
+    let elements = document.getElementsByClassName('message');
+    
+    Array.from( elements ).map( element => {
+      element.style.display = 'none';
+    });
   },
   /**
    * Scripts da página index
@@ -24,10 +26,20 @@ const Admin = {
      *  Inicia tela de login
      */
     init: () => {
-      setTimeout(() => $("#msg-error").slideUp(), 3521);
+      setTimeout(() => Admin.hiddenError(), 3541);
     }
   },
   manage: {
+    toggleForm: () => {
+      
+      let form = document.getElementById("create-form");
+      
+      if ( form.style.top != '0px' || form.style.top == '' ){
+        form.style.top = '0';
+      }else{
+        form.style.top = '-100vh';
+      }
+    },
     commit: ( rowID ) => {
       let body = Admin.manage._mapRowAttributes(rowID);
       
@@ -36,7 +48,7 @@ const Admin = {
         method: 'PUT',
         data: body,
         success: (data) => {
-          console.log(data);
+          Admin.manage.enableCommit(rowID, false);
         }
       });
       
@@ -49,7 +61,7 @@ const Admin = {
         method: 'DELETE',
         data: body,
         success: (data) => {
-          console.log(data);
+          document.getElementById(rowID).remove();
         }
       });
 
@@ -76,13 +88,13 @@ const Admin = {
     /**
      * Habilita o botão de salvar
      */
-    enableCommit: (rowID) => {
+    enableCommit: (rowID, state = true) => {
       let row = document.getElementById(rowID);
       let button = row.querySelector("#save");
       
       // button.addEventListener('click', commit)
       
-      button.disabled = false;
+      button.disabled = !state;
 
     },
     /** 

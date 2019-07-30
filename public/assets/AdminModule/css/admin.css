@@ -5,3 +5,16 @@ body {
 .sidebar {
   height: calc(100vh - 40px);
 }
+
+form { 
+  height: 100vh;
+  position: fixed;
+  padding: 100px 70px;
+  box-sizing: border-box;
+  background: white;
+  width: 100%;
+  left: 0;
+  top: -100vh;
+  transition: all 0.4s ease-in-out;
+  z-index: 5;
+}

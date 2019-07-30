@@ -207,7 +207,7 @@ class Model {
 		}
 		catch( \PDOException $e ){
 			
-			throw new \Exception( $e->getMessage() );
+			return false;
 			
 		}
 		
@@ -252,7 +252,7 @@ class Model {
 		}
 		catch( \PDOException $e ){
 			
-			throw new \Exception( $e->getMessage() );
+			return false;
 			
 		}
 		

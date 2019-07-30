@@ -92,7 +92,22 @@ class CrudController {
   public function create( ServerRequestInterface $request, ResponseInterface $response )
   {
 
+    if ( ! $this->mountObjects( $request->getAttribute('model') ) ){
+      return ResponseHandlers::error($response, 'BAD_MODEL');
+    }
+
+    $body = (object) $request->getParsedBody();
     
+    foreach ( $body as $attribute => $value ){
+      $method_name = 'set' . ucfirst($attribute);
+      $this->blank_model->$method_name( $body->$attribute );
+    }
+
+    if ( $this->blank_model->create( $this->db ) ){
+      return $response->withRedirect('/admin/manage/' . $this->model_name . '?message=CREATE_SUCCESS');
+    }else{
+      return $response->withRedirect('/admin/manage/' . $this->model_name . '?error=CREATE_FAILED&formState=true');
+    }    
 
   }
 

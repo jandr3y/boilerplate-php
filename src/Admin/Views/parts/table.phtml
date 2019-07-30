@@ -17,7 +17,7 @@
       <?php endforeach; ?> 
       <td> 
         <button type="button" class="btn btn-danger" onclick="Admin.manage.delete(<?= $rowID ?>)">Deletar</button>
-        <button type="button" class="btn btn-primary" onclick="Admin.manage.commit(<?= $rowID ?>) " id="save">Salvar</button> 
+        <button type="button" class="btn btn-primary" onclick="Admin.manage.commit(<?= $rowID ?>) " disabled id="save">Salvar</button> 
       </td>
     </tr>
   <?php endforeach; ?>

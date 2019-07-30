@@ -47,6 +47,35 @@ class AdminController  {
   }
 
   /**
+   * Verifica se há mensagens
+   * 
+   * @param string Query
+   * @return Array|null
+   */
+  private function hasMessage( $query )
+  {
+    if ( !empty( $query->message ) ){
+      switch($query->message){
+        case 'CREATE_SUCCESS':
+          return [ 'type' => 'success', 'value' => 'Modelo criado com sucesso'];
+        default:
+          return [ 'type' => 'info', 'value' => '?? ;)'];
+      }
+    }
+
+    if ( !empty( $query->error ) ){
+      switch($query->error){
+        case 'CREATE_FAILED':
+          return [ 'type' => 'danger', 'value' => 'Houve um erro ao criar o modelo'];
+        default:
+          return [ 'type' => 'info', 'value' => '?? ;)'];
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Faz a trataiva do erro
    * 
    * @param string $type tipo do erro
@@ -117,6 +146,8 @@ class AdminController  {
       return $res->withRedirect('/admin/login');
     }
 
+    $query = (object) $req->getQueryParams();
+
     $modelName = $req->getAttribute('model');
     $modelPath = "\App\Models\\" . ucfirst( $modelName );  
     $model = new $modelPath();
@@ -128,9 +159,16 @@ class AdminController  {
       'models' => $this->getModelFiles(),
       'model' => $modelName,
       'modelArray' => $model->toArray(false),
+      'primaryKey' => $model::$primary,
+      'formState'  => (!empty( $query->formState ))  ? true : false,
       'table' => $list
     ];
 
+    $messages = $this->hasMessage( $query );
+    if ( $messages ){
+      $data['message'] = $messages;
+    }
+    
     $this->view->render($res, 'manage.phtml', $data);
   }
 
@@ -147,13 +185,12 @@ class AdminController  {
     $body = (object) $req->getParsedBody();
 
     $user = $userDAO->findOne( [
-      " username = :username AND password = :password AND role = 8",
+      " username = :username AND password = :password AND role = 4",
       [ 
         "username" => $body->username,
         "password" => md5( $body->password )
       ]
     ] );
-
 
     if( $user ){
       $_SESSION['user_id'] = $user->getId();

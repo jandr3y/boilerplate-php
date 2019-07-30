@@ -1,0 +1,17 @@
+<form id="create-form" action="/admin/crud/<?= $model ?>" method="POST" style="top: <?= $formState ? '0px' : '-100vh' ?>">
+<?php require_once __DIR__ . '/messages.phtml' ?>
+<h2>
+Criar novo <?= ucfirst($model) ?>
+<span class="float-right" style="cursor: pointer;" onclick="Admin.manage.toggleForm()">&times;</span>
+</h2>
+<hr>
+  <?php foreach( $modelArray as $attribute => $value ): ?>
+    <?php if( $attribute != $primaryKey ): ?>
+      <div class="form-group">
+        <label for="<?= $attribute ?>"><b><?= ucfirst( $attribute ) ?></b></label>
+        <input type="text" class="form-control" name="<?= $attribute ?>" id="<?= $attribute ?>" placeholder="<?= ucfirst($attribute) ?>" />
+      </div>
+    <?php endif; ?>
+  <?php endforeach; ?>
+  <input type="submit" value="Criar" class="btn btn-success form-control">
+</form>

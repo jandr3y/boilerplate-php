@@ -43,11 +43,17 @@ class CrudController {
    * @var Array[string]
    */
   private $body_attributes = [];
+
+  /**
+   * @var \Slim\Flash\Messages
+   */
+  private $flash;
   
-  public function __construct( \PDO $db )
+  public function __construct( \PDO $db, \Slim\Flash\Messages $flash )
   {
     $this->db = $db;
     $this->view = new \Slim\Views\PhpRenderer(__DIR__ . '/../Views/');
+    $this->flash = $flash;
   }
 
   /**
@@ -106,7 +112,8 @@ class CrudController {
     if ( $this->blank_model->create( $this->db ) ){
       return $response->withRedirect('/admin/manage/' . $this->model_name . '?message=CREATE_SUCCESS');
     }else{
-      return $response->withRedirect('/admin/manage/' . $this->model_name . '?error=CREATE_FAILED&formState=true');
+      $this->flash->addMessage('pre-object', json_encode( $this->blank_model->toArray() ));
+      return $response->withStatus(302)->withHeader('Location', '/admin/manage/' . $this->model_name . '?error=CREATE_FAILED&formState=true');
     }    
 
   }

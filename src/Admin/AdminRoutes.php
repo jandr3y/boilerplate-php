@@ -1,19 +1,34 @@
 <?php
 
+/**
+ * True para ativar módulos de Desenvolvimento
+ */
+
 namespace App\Admin;
 
+define('_ADMIN_DEV_', true);
+
 class AdminRoutes {
+  
   public function __invoke(\Slim\App $app)
   {
+    
     $container = $app->getContainer();
+    
+    $container['flash'] = function(){
+      return new \Slim\Flash\Messages();
+    };
+    
     $container['AdminController'] = function ( $c ) {
       $db = $c->get('db');
-      return new \App\Admin\Controllers\AdminController($db, $c['settings']['jwtSecret'], $c->get('renderer'));
+      $flash = $c->get('flash');
+      return new \App\Admin\Controllers\AdminController($db, $flash);
     };
     
     $container['CrudController'] = function ( $c ) {
       $db = $c->get('db');
-      return new \App\Admin\Controllers\CrudController($db, $c->get('renderer'));
+      $flash = $c->get('flash');
+      return new \App\Admin\Controllers\CrudController($db, $flash);
     };
 
     $app->post('/admin/auth', 'AdminController:auth'); 

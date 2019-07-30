@@ -30,5 +30,11 @@
 
 <?php require_once( __DIR__ . '/parts/footer.phtml' ); ?>
 <script>
-  $(document).ready(Admin.index.init);  
+  $(document).ready(() => {
+    Admin.index.init();
+    
+    <?php if( ! empty( $preObject ) ): ?>
+      Admin.manage.fillForm('<?= $preObject ?>');
+    <?php endif; ?>
+  });  
 </script>

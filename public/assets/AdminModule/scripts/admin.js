@@ -30,6 +30,28 @@ const Admin = {
     }
   },
   manage: {
+    fillForm: (preObject) => {
+      
+      let form = document.getElementById("create-form");
+      
+      try {
+        preObject = JSON.parse(preObject);
+      }catch(e){
+        throw e;
+      }
+
+      let attributes = Object.keys( preObject );
+
+      attributes.map( attribute => {
+  
+        let input = form.querySelector('#' + attribute);
+        if ( input ){
+          input.value = preObject[attribute];
+        }
+      
+      });
+
+    },
     toggleForm: () => {
       
       let form = document.getElementById("create-form");

@@ -2,13 +2,40 @@
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" href="#">
+        <a class="nav-link " href="#">
           <span data-feather="home"></span>
           <a href="/admin">Inicio <span class="sr-only">(current)</span></a>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link " href="#">
+        <a href="/admin">Geral</a>
+        </a>
+      </li>
+
+      <?php if( _ADMIN_DEV_ ): ?>
+        <li class="nav-item">
+          <a class="nav-link " href="#">
+          <a href="/admin">Banco de Dados</a>
+          </a>
+        </li>
+      <?php endif; ?>
+
+      <li class="nav-item">
+        <a class="nav-link " href="#">
+        <a href="/admin">Segurança</a>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link " href="#">
+        <a href="/admin">Integrações</a>
+        </a>
+      </li>
     </ul>
 
+
+  <?php if( _ADMIN_DEV_ ): ?>
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
       <span>Modelos</span>
       <a class="d-flex align-items-center text-muted" href="#">
@@ -27,5 +54,6 @@
         <?php endforeach; ?>
       <?php endif; ?>
     </ul>
+  <?php endif; ?>
   </div>
 </nav>

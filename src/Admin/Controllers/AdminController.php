@@ -9,15 +9,15 @@ use \App\Models\User;
 
 class AdminController  {
   
-  private $secret;
   private $view;
   private $db;
-  
-  public function __construct( \PDO $db, string $secret)
+  private $flash;
+
+  public function __construct( \PDO $db, \Slim\Flash\Messages $flash )
   {
     $this->db = $db;
     $this->view = new \Slim\Views\PhpRenderer(__DIR__ . '/../Views/');
-    $this->secret = $secret;
+    $this->flash = $flash;
   }
 
   /**
@@ -164,9 +164,16 @@ class AdminController  {
       'table' => $list
     ];
 
+    // Query Messages
     $messages = $this->hasMessage( $query );
+
     if ( $messages ){
       $data['message'] = $messages;
+    }
+
+    $flash_messages = $this->flash->getMessages();
+    if ( isset( $flash_messages['pre-object'] ) ){
+      $data['preObject'] = $flash_messages['pre-object'][0];
     }
     
     $this->view->render($res, 'manage.phtml', $data);

@@ -16,7 +16,13 @@ class Db {
   /**
    * @var stdClass | Qualquer objeto extendido por Model
    */
-	public $model;
+  public $model;
+  
+  /**
+   * @var \Monolog\Logger
+   */
+  private $logger;
+
 	
 	public function __construct($db, $table, $model){
 		
@@ -24,8 +30,12 @@ class Db {
 		
 		$this->table = $table;
 		
-		$this->model = $model;
-		
+    $this->model = $model;
+    
+    $loggerPath = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../../../logs/db.log';
+		$this->logger = new \Monolog\Logger('DbLog');
+    $this->logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+    $this->logger->pushHandler(new \Monolog\Handler\StreamHandler($loggerPath, \Monolog\Logger::DEBUG));
 	}
   
   /**
@@ -51,8 +61,9 @@ class Db {
       return $smtp->fetchObject($model);
     
     }catch( \PDOException $e ){
-
-      return $e->getMessage();
+      $this->logger->error('Não foi possivel buscar um ' . $this->model);
+      $this->logger->error($e->getMessage());
+      return false;
 
     }
 		
@@ -72,14 +83,25 @@ class Db {
 		$sql = "select * from {$this->table} {$where->query}";
 		
 		
-		if(isset($limit))
-		$sql .= "limit {$limit}";
-		
-		$smtp = $this->db->prepare($sql);
-		
-		$smtp->execute( $where->params );
-		
-		return $smtp->fetchAll();
+		if(isset($limit)){
+      $sql .= "limit {$limit}";
+    }
+    
+    try {
+
+      $smtp = $this->db->prepare($sql);
+      
+      $smtp->execute( $where->params );
+      
+      return $smtp->fetchAll();
+    
+    }catch(\PDOException $e){
+
+      $this->logger->error('Não foi possivel buscar ' . $this->model);
+      $this->logger->error($e->getMessage());
+      return false;
+    
+    }
 		
 	}
   

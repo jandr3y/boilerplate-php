@@ -15,14 +15,22 @@ class Model {
 	
 	private $stackMessages = [];
 	
-	
+	private $logger;
+
+	public function __construct()
+	{
+		$loggerPath = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../../logs/db.log';
+		$this->logger = new \Monolog\Logger('DbLog');
+    $this->logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+    $this->logger->pushHandler(new \Monolog\Handler\StreamHandler($loggerPath, \Monolog\Logger::DEBUG));
+	}
+
 	/**
    * Retorna classe de serviço
    * 
    * @param PDO $db Conexão com o banco de dados
    * @return stdClass|bool Objeto Service do Modelo ou se não conseguir a referencia false.
    */
-	
 	public static function getDAO( \PDO $db )
 	{
 		
@@ -89,6 +97,8 @@ class Model {
 		}
 		else{
 			
+			$this->logger->error('Não foi informado um campo identificador do model ' . static::$source);
+
 			throw new \Exception('Não foi informado um campo identificador.');
 			
 		}
@@ -134,8 +144,7 @@ class Model {
 				
 			}
 			
-		}
-		else{
+		}else{
 			
 			return false;
 			
@@ -156,6 +165,8 @@ class Model {
 		unset($object_array['stackMessages']);
 		
 		unset($object_array['diffs']);
+
+		unset($object_array['logger']);
 		
 		return $object_array;
 		
@@ -206,7 +217,8 @@ class Model {
 			
 		}
 		catch( \PDOException $e ){
-			
+			$this->logger->error('Erro ao criar ' . static::$source);
+			$this->logger->error($e->getMessage());
 			return false;
 			
 		}
@@ -220,7 +232,7 @@ class Model {
    */
 	public function update( \PDO $db )
 	{
-		
+	
 		$object_vars = $this->getObjectVars();
 		
 		$diffs = $this->getDiffs( $db );
@@ -251,7 +263,8 @@ class Model {
 			
 		}
 		catch( \PDOException $e ){
-			
+			$this->logger->error('Erro ao alterar ' . static::$source);
+			$this->logger->error($e->getMessage());
 			return false;
 			
 		}
@@ -278,7 +291,8 @@ class Model {
 			
 		}
 		catch( \PDOException $e ){
-			
+			$this->logger->error('Erro ao deletar ' . static::$source);
+			$this->logger->error( $e->getMessage() );
 			throw new \Exception( $e->getMessage() );
 			
 		}

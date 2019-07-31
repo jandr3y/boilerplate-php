@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use \Firebase\JWT\JWT;
 use \App\Models\User;
+use \App\Admin\Utils\FileManagement;
 
 class AdminController  {
   
@@ -18,32 +19,6 @@ class AdminController  {
     $this->db = $db;
     $this->view = new \Slim\Views\PhpRenderer(__DIR__ . '/../Views/');
     $this->flash = $flash;
-  }
-
-  /**
-   * Busca os modelos disponiveis.
-   */
-  private function getModelFiles()
-  {
-    $files = scandir(__DIR__ . '/../../Models');
-    
-    if ( is_array( $files ) ){
-      foreach( $files as $key => $file ) {
-        if ( strpos($file, 'php') > 0 ){
-          $files[ $key ] = explode(".", $file)[0];
-        } else {
-          unset( $files[ $key ] );
-        }
-      }
-    }
-
-    return array_filter( $files, function( $file ) {
-      if ( $file != 'Model' ) {
-        return true;
-      }else{
-        return false;
-      }
-    });
   }
 
   /**
@@ -119,7 +94,7 @@ class AdminController  {
     }
 
     $data = [
-      'models' => $this->getModelFiles()
+      'models' => FileManagement::getModelFiles()
     ];
     
 
@@ -156,7 +131,7 @@ class AdminController  {
     $list = $dao->find();
 
     $data = [
-      'models' => $this->getModelFiles(),
+      'models' => FileManagement::getModelFiles(),
       'model' => $modelName,
       'modelArray' => $model->toArray(false),
       'primaryKey' => $model::$primary,

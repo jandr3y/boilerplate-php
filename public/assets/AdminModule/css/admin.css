@@ -6,7 +6,7 @@ body {
   height: calc(100vh - 40px);
 }
 
-form { 
+#create-form { 
   height: 100vh;
   position: fixed;
   padding: 100px 70px;

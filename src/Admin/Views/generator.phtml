@@ -1,0 +1,37 @@
+<?php require_once( __DIR__ . '/parts/header.phtml' ); ?>
+
+<?php require_once( __DIR__ . '/parts/top-navigation.phtml' ); ?>
+
+<div class="container-fluid">
+  <div class="row">
+    <?php require_once( __DIR__ . '/parts/sidemenu.phtml' ); ?>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style="margin-top: 40px">
+          
+          <?php if( !empty($message) ): ?>
+            <div style="margin-top: 20px">
+            
+            <?php require( __DIR__ . '/parts/messages.phtml' ); ?>
+            </div>
+          <?php endif; ?>
+
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Gerador</h1>
+          </div>
+
+          <?php require( __DIR__ . '/parts/generator-form.phtml'); ?>
+
+    </main>
+  </div>  
+</div>
+
+<?php require_once( __DIR__ . '/parts/footer.phtml' ); ?>
+<script>
+  $(document).ready(() => {
+    Admin.index.init();
+    
+    <?php if( ! empty( $preObject ) ): ?>
+      Admin.manage.fillForm('<?= $preObject ?>');
+    <?php endif; ?>
+  });  
+</script>

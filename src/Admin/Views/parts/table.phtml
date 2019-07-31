@@ -12,7 +12,7 @@
     <tr id="<?= $rowID ?>">
       <?php foreach( $modelArray as $key => $value ): ?>
       <td id="<?= $rowID ?>-<?= $key ?>" ondblclick="Admin.manage.editField('<?= $key ?>', '<?= $row[$key] ?>', '<?= $rowID ?>-<?= $key ?>')">
-        <?= $row[$key] ?>
+        <?= $G::__($row[$key]) ?>
       </td>
       <?php endforeach; ?> 
       <td> 

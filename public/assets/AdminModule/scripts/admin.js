@@ -62,11 +62,11 @@ const Admin = {
         form.style.top = '-100vh';
       }
     },
-    commit: ( rowID ) => {
+    commit: ( rowID, modelName ) => {
       let body = Admin.manage._mapRowAttributes(rowID);
       
       $.ajax({
-        url: URL + '/crud/user',
+        url: URL + '/crud/' + modelName,
         method: 'PUT',
         data: body,
         success: (data) => {
@@ -75,11 +75,11 @@ const Admin = {
       });
       
     },
-    delete: (rowID) => {
+    delete: (rowID, modelName) => {
       let body = Admin.manage._mapRowAttributes( rowID );
 
       $.ajax({
-        url: URL + '/crud/user',
+        url: URL + '/crud/' + modelName,
         method: 'DELETE',
         data: body,
         success: (data) => {

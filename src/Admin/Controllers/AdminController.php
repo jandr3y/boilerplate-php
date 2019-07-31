@@ -129,10 +129,10 @@ class AdminController  {
     $dao = $model->getDAO( $this->db );
 
     $list = $dao->find();
-
+    
     $data = [
       'models' => FileManagement::getModelFiles(),
-      'model' => $modelName,
+      'modelName' => $modelName,
       'modelArray' => $model->toArray(false),
       'primaryKey' => $model::$primary,
       'formState'  => (!empty( $query->formState ))  ? true : false,

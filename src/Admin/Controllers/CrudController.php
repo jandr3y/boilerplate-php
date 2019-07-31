@@ -131,6 +131,7 @@ class CrudController {
     }
 
     $body = (object) $request->getParsedBody();
+    
     $identifier_key = $this->blank_model::$primary;
 
     if ( ! empty( $body->$identifier_key ) ){
@@ -162,7 +163,7 @@ class CrudController {
     $body = (object) $request->getParsedBody();
     $attrs = $this->getBodyAttributes( $body );
     $identifier_key = $this->blank_model::$primary;
-
+    
     if ( ! empty( $body->$identifier_key ) ) {
       
       // Busca o modelo pelo ID

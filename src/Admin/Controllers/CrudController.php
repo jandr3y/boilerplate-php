@@ -109,6 +109,7 @@ class CrudController {
       $this->blank_model->$method_name( $body->$attribute );
     }
 
+
     if ( $this->blank_model->create( $this->db ) ){
       return $response->withRedirect('/admin/manage/' . $this->model_name . '?message=CREATE_SUCCESS');
     }else{
@@ -131,6 +132,7 @@ class CrudController {
     }
 
     $body = (object) $request->getParsedBody();
+    
     $identifier_key = $this->blank_model::$primary;
 
     if ( ! empty( $body->$identifier_key ) ){
@@ -162,7 +164,7 @@ class CrudController {
     $body = (object) $request->getParsedBody();
     $attrs = $this->getBodyAttributes( $body );
     $identifier_key = $this->blank_model::$primary;
-
+    
     if ( ! empty( $body->$identifier_key ) ) {
       
       // Busca o modelo pelo ID

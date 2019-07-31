@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use \Firebase\JWT\JWT;
 use \App\Models\User;
 use \App\Admin\Utils\FileManagement;
-
+use \App\Admin\Utils\GlobalView;
 class AdminController  {
   
   private $view;
@@ -129,10 +129,11 @@ class AdminController  {
     $dao = $model->getDAO( $this->db );
 
     $list = $dao->find();
-
+    
     $data = [
+      'G' => new GlobalView,
       'models' => FileManagement::getModelFiles(),
-      'model' => $modelName,
+      'modelName' => $modelName,
       'modelArray' => $model->toArray(false),
       'primaryKey' => $model::$primary,
       'formState'  => (!empty( $query->formState ))  ? true : false,

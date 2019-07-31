@@ -12,12 +12,12 @@
     <tr id="<?= $rowID ?>">
       <?php foreach( $modelArray as $key => $value ): ?>
       <td id="<?= $rowID ?>-<?= $key ?>" ondblclick="Admin.manage.editField('<?= $key ?>', '<?= $row[$key] ?>', '<?= $rowID ?>-<?= $key ?>')">
-        <?= $row[$key] ?>
+        <?= $G::__($row[$key]) ?>
       </td>
       <?php endforeach; ?> 
       <td> 
-        <button type="button" class="btn btn-danger" onclick="Admin.manage.delete(<?= $rowID ?>)">Deletar</button>
-        <button type="button" class="btn btn-primary" onclick="Admin.manage.commit(<?= $rowID ?>) " disabled id="save">Salvar</button> 
+        <button type="button" class="btn btn-danger" onclick="Admin.manage.delete(<?= $rowID ?>, '<?= $modelName ?>')">Deletar</button>
+        <button type="button" class="btn btn-primary" onclick="Admin.manage.commit(<?= $rowID ?>, '<?= $modelName ?>')" disabled id="save">Salvar</button> 
       </td>
     </tr>
   <?php endforeach; ?>

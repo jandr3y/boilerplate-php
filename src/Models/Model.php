@@ -17,12 +17,22 @@ class Model {
 	
 	private $logger;
 
+	/**
+	 * @var string
+	 */
+	protected $updatedAt;
+
+	/**
+	 * @var string
+	 */
+	protected $createdAt;
+
 	public function __construct()
 	{
 		$loggerPath = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../../logs/db.log';
 		$this->logger = new \Monolog\Logger('DbLog');
     $this->logger->pushProcessor(new \Monolog\Processor\UidProcessor());
-    $this->logger->pushHandler(new \Monolog\Handler\StreamHandler($loggerPath, \Monolog\Logger::DEBUG));
+		$this->logger->pushHandler(new \Monolog\Handler\StreamHandler($loggerPath, \Monolog\Logger::DEBUG));
 	}
 
 	/**
@@ -131,7 +141,9 @@ class Model {
 				$current_model = $this->toArray();
 				
 				foreach( $db_object as $attribute => $value ){
-					
+					$this->logger->debug( $current_model[ $attribute ] );
+					$this->logger->debug( $value );
+					$this->logger->debug('------------------');
 					if ( $current_model[ $attribute ] != $value && $current_model[ $attribute ] != null ){
 						
 						$diffs[] = $attribute;
@@ -168,6 +180,12 @@ class Model {
 
 		unset($object_array['logger']);
 		
+		
+		// remove timestamps if disabled
+		if( is_bool( static::$timestamps ) && !static::$timestamps ){
+			unset( $object_array['updatedAt'] );
+			unset( $object_array['createdAt'] );
+		}
 		return $object_array;
 		
 	}
@@ -194,6 +212,10 @@ class Model {
 			
 			if ( $key === "id" || $key === "stackMessages" ) continue;
 			
+			// Se o timestamp estiver falso pular parte do time stamp
+			if ( ! empty( static::$timestamps ) && ! static::$timestamps && ( $key === 'createdAt' || $key === 'udpatedAt' ) ){
+				continue;
+			}
 			// 			create fields to insert
 			$columns[] = $key;
 			
@@ -204,8 +226,11 @@ class Model {
 		}
 		
 		$columns = implode( ",", $columns );
-		
 		$values  = implode( ",", $values );
+		
+		$time_now = (new \DateTime())->format('Y-m-d H:i:s');
+		$bind_values[":createdAt"] = $time_now;
+		$bind_values[":updatedAt"] = $time_now;
 		
 		$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$values})";
 		
@@ -236,7 +261,7 @@ class Model {
 		$object_vars = $this->getObjectVars();
 		
 		$diffs = $this->getDiffs( $db );
-		
+
 		$fields_to_update = [];
 		
 		$bind_values      = [];
@@ -253,8 +278,17 @@ class Model {
 		
 		$bind_values[':id_key'] = $this->getIdentifier();
 		
-		$query = "UPDATE " . static::$table . " SET " . implode(',', $fields_to_update) . " WHERE " . static::$primary . " = :id_key";
+		$fields_to_update_string = implode(',', $fields_to_update);
+		$time_now = (new \DateTime())->format('Y-m-d H:i:s');
 		
+		// ADD timestamps fields
+		if ( is_bool( static::$timestamps ) && static::$timestamps ){
+			$fields_to_update_string .= ( count( $fields_to_update ) > 0 ? ',' : '' ) . 'updatedAt = :updatedAt';
+			$bind_values[':updatedAt'] = $time_now;
+		}
+		
+		$query = "UPDATE " . static::$table . " SET " . $fields_to_update_string  . " WHERE " . static::$primary . " = :id_key";
+
 		try {
 			
 			$smtp = $db->prepare( $query );
@@ -299,4 +333,52 @@ class Model {
 
 	}
 	
+
+	/**
+	 * Get the value of createdAt
+	 *
+	 * @return  string
+	 */ 
+	public function getCreatedAt()
+	{
+		return $this->createdAt;
+	}
+
+	/**
+	 * Set the value of createdAt
+	 *
+	 * @param  string  $createdAt
+	 *
+	 * @return  self
+	 */ 
+	public function setCreatedAt( $createdAt )
+	{
+		$this->createdAt = $createdAt;
+
+		return $this;
+	}
+
+	/**
+	 * Get the value of updatedAt
+	 *
+	 * @return  string
+	 */ 
+	public function getUpdatedAt()
+	{
+		return $this->updatedAt;
+	}
+
+	/**
+	 * Set the value of updatedAt
+	 *
+	 * @param  string  $updatedAt
+	 *
+	 * @return  self
+	 */ 
+	public function setUpdatedAt(string $updatedAt)
+	{
+		$this->updatedAt = $updatedAt;
+
+		return $this;
+	}
 }

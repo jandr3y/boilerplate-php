@@ -3,6 +3,7 @@
 A Ideia inicial era fazer algo generico que fosse facil de escrever
 
 Atualização: Não sei se esta tão facil de escrever
+
 Atualização2: Já ta ficando overenginering
 
 

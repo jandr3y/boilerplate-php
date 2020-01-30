@@ -37,7 +37,7 @@ class UserController extends BaseController {
 		
 		try {
 			
-			Validator::validate( $body->username, 'Usuário')->required()->isUsername();
+			Validator::validate( $body->email, 'Email')->required()->isEmail();
 			Validator::validate( $body->password, 'Senha' )->required()->isStrongPassword();
 			Validator::validate( $body->name, 'Nome' )->minLength(5)->maxLength(35);
 			
@@ -49,11 +49,11 @@ class UserController extends BaseController {
 		
 		$user->setPassword( md5( $body->password ) );
 		
-		$user->setName( $body->name );
+		$user->setRealname( $body->name );
 		
-		$user->setUsername( $body->username );
+		$user->setEmail( $body->email );
 		
-		$user->setRole( 1 );
+		$user->setRole( 0);
 		
 		try {
 			

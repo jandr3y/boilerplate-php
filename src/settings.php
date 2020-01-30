@@ -17,9 +17,9 @@ return [
         ],
         'db' => [
             'host' => 'localhost',
-            'user' => 'root',
-            'pass' => '',
-            'dbname' => 'slim'
+            'user' => 'nedemo',
+            'pass' => 'nedemo',
+            'dbname' => 'saturno'
         ],
         'jwtSecret' => 'zebra',
         'acl' => [

@@ -13,10 +13,13 @@ namespace App\Models;
 class User extends Model {
 
   protected $id;
-  protected $username;
-  protected $name;
+  protected $email;
+  protected $realname;
   protected $password;
+  protected $verify_email;
   protected $role;
+
+  public static $timestamps = true;
 
   public static $source = "User";
 
@@ -47,26 +50,6 @@ class User extends Model {
   public function setId($id)
   {
     $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of username
-   */ 
-  public function getUsername()
-  {
-    return $this->username;
-  }
-
-  /**
-   * Set the value of username
-   *
-   * @return  self
-   */ 
-  public function setUsername($username)
-  {
-    $this->username = $username;
 
     return $this;
   }
@@ -130,4 +113,69 @@ class User extends Model {
 
     return $this;
   }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRealname()
+    {
+        return $this->realname;
+    }
+
+    /**
+     * @param mixed $realname
+     */
+    public function setRealname($realname)
+    {
+        $this->realname = $realname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVerifyEmail()
+    {
+        return $this->verify_email;
+    }
+
+    /**
+     * @param mixed $verify_email
+     */
+    public function setVerifyEmail($verify_email)
+    {
+        $this->verify_email = $verify_email;
+    }
+    protected $picture;
+
+    /**
+     * @return mixed
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param mixed $picture
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
+    }
 }

@@ -2,4 +2,5 @@
 /logs/*
 !/logs/README.md
 phpDocumentor.phar
-docs/
+docs
+.idea/

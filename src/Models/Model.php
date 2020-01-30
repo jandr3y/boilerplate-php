@@ -20,18 +20,18 @@ class Model {
 	/**
 	 * @var string
 	 */
-	protected $updatedAt;
+	protected $updated_at;
 
 	/**
 	 * @var string
 	 */
-	protected $createdAt;
+	protected $created_at;
 
 	public function __construct()
 	{
 		$loggerPath = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../../logs/db.log';
 		$this->logger = new \Monolog\Logger('DbLog');
-    $this->logger->pushProcessor(new \Monolog\Processor\UidProcessor());
+        $this->logger->pushProcessor(new \Monolog\Processor\UidProcessor());
 		$this->logger->pushHandler(new \Monolog\Handler\StreamHandler($loggerPath, \Monolog\Logger::DEBUG));
 	}
 
@@ -182,7 +182,7 @@ class Model {
 		
 		
 		// remove timestamps if disabled
-		if( is_bool( static::$timestamps ) && !static::$timestamps ){
+		if( isset(static::$timestamps) ){
 			unset( $object_array['updatedAt'] );
 			unset( $object_array['createdAt'] );
 		}
@@ -207,33 +207,32 @@ class Model {
 		$values       = [];
 		
 		$bind_values  = [];
-		
+
+        $time_now = (new \DateTime())->format('Y-m-d H:i:s');
+
 		foreach( $object_vars as $key => $value ){
-			
+
 			if ( $key === "id" || $key === "stackMessages" ) continue;
-			
-			// Se o timestamp estiver falso pular parte do time stamp
-			if ( ! empty( static::$timestamps ) && ! static::$timestamps && ( $key === 'createdAt' || $key === 'udpatedAt' ) ){
-				continue;
-			}
-			// 			create fields to insert
-			$columns[] = $key;
-			
-			$values[]  = ":" . $key;
-			
-			$bind_values[":" . $key] = $value;
-			
+
+
+            if ( isset(static::$timestamps) && ($key === 'created_at' || $key === 'updated_at' ) ) {
+                $bind_values[":" . $key] = $time_now;
+            }else if ( !empty($value) ){
+                $bind_values[":" . $key] = $value;
+            }else{
+                continue;
+            }
+
+            $columns[] = $key;
+            $values[]  = ":" . $key;
 		}
-		
+
+
 		$columns = implode( ",", $columns );
 		$values  = implode( ",", $values );
 		
-		$time_now = (new \DateTime())->format('Y-m-d H:i:s');
-		$bind_values[":createdAt"] = $time_now;
-		$bind_values[":updatedAt"] = $time_now;
-		
 		$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$values})";
-		
+
 		try {
 			
 			$smtp = $db->prepare( $query );
@@ -283,7 +282,7 @@ class Model {
 		
 		// ADD timestamps fields
 		if ( is_bool( static::$timestamps ) && static::$timestamps ){
-			$fields_to_update_string .= ( count( $fields_to_update ) > 0 ? ',' : '' ) . 'updatedAt = :updatedAt';
+			$fields_to_update_string .= ( count( $fields_to_update ) > 0 ? ',' : '' ) . 'updated_at = :updatedAt';
 			$bind_values[':updatedAt'] = $time_now;
 		}
 		

@@ -24,7 +24,7 @@ class ValidatorInterface {
    */
   private $alias;
 
-  public function __construct( $value , $args )
+  public function __construct( $value , $alias )
   {
     $this->value = $value;
     $this->alias = $alias;
@@ -32,15 +32,12 @@ class ValidatorInterface {
 
   public function __call($name, $arguments)
   {
-    var_dump($name); die();
     if(method_exists($this, $name)) {
       if ( $name != 'required' ) {
-        var_dump($this->value); die();
         if ( ! isset( $this->value ) || empty( $this->value ) || trim( $this->value ) == '' ) {
-          var_dump("EHE"); die();
           return $this;
         }else{
-          return $this->$name( ...$arg );;
+          return $this->$name( $this->alias );;
         }
       }
     }
@@ -82,7 +79,7 @@ class ValidatorInterface {
   public function isUsername()
   {
     if ( preg_match('/^[a-z\d_]{4,20}$/i', $this->value) ) {
-      return $this->value;
+      return $this;
     }else{
       throw new \Exception("Nome de usuário deve conter apenas números e letras");
     }
@@ -114,7 +111,7 @@ class ValidatorInterface {
     if ( strlen( $this->value ) > $size ) {
       throw new \Exception("O campo {$this->alias} deve conter no maximo {$size} caracteres");
     }else{
-      return $value; 
+      return $this;
     }
   }
 
@@ -127,6 +124,16 @@ class ValidatorInterface {
       throw new \Exception("O campo {$this->alias} não pode ficar vazio");
     }else{
       return $this;
+    }
+  }
+
+
+  public function isEmail()
+  {
+    if( !filter_var($this->value, FILTER_VALIDATE_EMAIL) ) {
+        throw new \Exception("O campo {$this->alias} deve ser um email valido");
+    }else{
+        return $this;
     }
   }
 

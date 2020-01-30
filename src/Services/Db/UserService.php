@@ -19,9 +19,9 @@ class UserService extends Db {
     
     $smtp = $this->db->prepare($sql);
 
-    $smtp->bindParam(':username', $u->username);
-    $smtp->bindParam(':password', $u->password);
-    $smtp->bindParam(':name', $u->name);
+    $smtp->bindParam(':username', $u->getUsername());
+    $smtp->bindParam(':password', $u->getPassword());
+    $smtp->bindParam(':name', $u->getRealname());
 
     return $smtp->execute();
   }

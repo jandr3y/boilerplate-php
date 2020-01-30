@@ -19,7 +19,7 @@ $app->add(new PermissionMiddleware($container['settings']['acl'], $container['se
 $app->post('/auth', 'AuthController:auth');
 
 $app->post('/users', 'UserController:post');
-$app->get('/users', 'UserController:list');
+$app->get('/users', 'UserController:find');
 $app->get('/users/{id}', 'UserController:get');
 $app->delete('/users/{id}', 'UserController:delete');
 $app->put('/users/{id}', 'UserController:update');

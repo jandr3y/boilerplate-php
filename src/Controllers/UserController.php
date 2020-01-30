@@ -113,7 +113,7 @@ class UserController extends BaseController
      * @return Array<User>
      */
 
-    public function list(ServerRequestInterface $request, ResponseInterface $response)
+    public function find(ServerRequestInterface $request, ResponseInterface $response)
     {
 
         $userDAO = User::getDAO($this->db);

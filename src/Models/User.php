@@ -27,7 +27,7 @@ class User extends Model {
 
   public static $primary = "id";
 
-  public static $hidden = ["password", "email", "verify_email", "created_at", "updated_at"];
+  public static $hidden = ["password"];
 
   public function __construct()
   {

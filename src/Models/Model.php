@@ -67,26 +67,38 @@ class Model {
    * @return Array Objeto estanciado em Array
    */
 	
-	public function toArray($hidden = true){
+	public function toArray($config = []){
 		
 		$object_array = $this->getObjectVars();
 		
 		unset($object_array['stackMessages']);
-		
-		if( isset ( static::$hidden ) ){
-			
-			if( is_array( static::$hidden ) && $hidden){
-				
-				foreach ( static::$hidden as $field ){
-					
-					unset($object_array[ $field ]);
-					
-				}
-				
-			}
-			
-		}
-		
+
+		if ( is_array($config['hidden']) ) {
+		    return array_filter($object_array, function($element) use ($config) {
+		        var_dump($element);
+                if ( !is_bool(array_search($element, $config['hidden'])) ) {
+                    return false;
+                }else{
+                    return true;
+                }
+            }, ARRAY_FILTER_USE_KEY);
+
+        }else{
+            if( isset ( static::$hidden ) ){
+
+                if( is_array( static::$hidden )){
+
+                    foreach ( static::$hidden as $field ){
+
+                        unset($object_array[ $field ]);
+
+                    }
+
+                }
+
+            }
+        }
+
 		return $object_array;
 		
 	}

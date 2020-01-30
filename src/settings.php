@@ -39,6 +39,9 @@ return [
                 ],
                 "delete" => [
                     "/users/{id}"
+                ],
+                'put' => [
+                    "/users/{id}"
                 ]
             ],
             'admin' => [

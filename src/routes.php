@@ -8,10 +8,9 @@ use \App\Admin\AdminRoutes;
 
 $container = $app->getContainer();
 
-
 // Admin Panel Module
-$admin = new AdminRoutes;
-$admin( $app );
+//$admin = new AdminRoutes;
+//$admin( $app );
 
 // Middlewares
 $app->add(new PermissionMiddleware($container['settings']['acl'], $container['settings']['jwtSecret']));
@@ -21,8 +20,9 @@ $app->post('/auth', 'AuthController:auth');
 
 $app->post('/users', 'UserController:post');
 $app->get('/users', 'UserController:list');
-$app->get('/users/{username}', 'UserController:get');
+$app->get('/users/{id}', 'UserController:get');
 $app->delete('/users/{id}', 'UserController:delete');
+$app->put('/users/{id}', 'UserController:update');
 
 $app->get('/', function(Request $req, Response $res){
   return $res->withJson([

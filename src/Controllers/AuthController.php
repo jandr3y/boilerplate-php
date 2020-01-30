@@ -32,9 +32,9 @@ class AuthController extends BaseController {
     $body = (object) json_decode($req->getBody());
 
     $user = $userDAO->findOne( [
-      " username = :username AND password = :password ",
+      " email = :email AND password = :password ",
       [ 
-        "username" => $body->username,
+        "email" => $body->email,
         "password" => md5( $body->password )
       ]
     ] );
@@ -44,7 +44,7 @@ class AuthController extends BaseController {
       
       $token = JWT::encode([
         "id"        => $user->getId(),
-        "username"  => $user->getUsername(),
+        "email"  => $user->getEmail(),
         "name"      => $user->getName(),
         "role"      => $user->getRole()
       ], $this->secret);

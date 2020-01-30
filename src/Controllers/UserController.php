@@ -76,7 +76,6 @@ class UserController extends BaseController {
    * Busca somente um usuário com base no id
    * @return User
    */
-	
 	public function get(ServerRequestInterface $request, ResponseInterface $response)
 	{
 		
@@ -112,12 +111,14 @@ class UserController extends BaseController {
 	{
 		
 		$userDAO = User::getDAO($this->db);
-		
+
+		$hiddenFields = ['password', 'email', 'verify_email', 'created_at', 'updated_at'];
+
 		$users = $userDAO->find([
 		'id > :id',
 		[ 'id' => 1 ]
-		]);
-		
+		], [ 'hidden' => $hiddenFields ]);
+
 		if ( is_array( $users ) ) {
 			
 			return $response->withJson($users);

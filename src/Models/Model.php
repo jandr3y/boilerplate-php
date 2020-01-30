@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Services\Db\Db;
 
 /**
  * Classe Model
@@ -47,8 +48,8 @@ class Model {
 		if ( isset( static::$source ) ) {
 			
 			$class_name = "\App\Services\Db\\" . static::$source . "Service";
-			
-			return new $class_name($db, static::$table, static::$source);
+
+			return new $class_name($db, static::$table, static::$source, static::$hidden);
 			
 		}
 		else{
@@ -243,7 +244,8 @@ class Model {
 		catch( \PDOException $e ){
 			$this->logger->error('Erro ao criar ' . static::$source);
 			$this->logger->error($e->getMessage());
-			return false;
+
+			throw new \Exception(Db::getFriendlyMessage($e));
 			
 		}
 		

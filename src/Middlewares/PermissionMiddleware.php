@@ -73,14 +73,14 @@ class PermissionMiddleware {
 		}
 		
 		if ( isset( $headers['HTTP_AUTHORIZATION'] ) ) {
-			
+			//var_dump($headers['HTTP_AUTHORIZATION'][0]); die;
 			try {
-				
-				$user_token = JWT::decode( $headers['HTTP_AUTHORIZATION'][0],  $this->secret, array('HS256') );
+
+				$user_token = JWT::decode( substr($headers['HTTP_AUTHORIZATION'][0], 8),  $this->secret, array('HS256') );
 				
 			}
 			catch( \Firebase\JWT\SignatureInvalidException $e ){
-				
+
 				return $response->withJson([ 'error' => 'Você não tem permissão para acessar esta rota' ], 403);
 				
 			}
@@ -91,7 +91,7 @@ class PermissionMiddleware {
 				
 				switch( $user_token->role ){
 					// Usuário normal
-					case 1: 
+					case 0:
 					$paths = $user[ strtolower($method) ];
 					
 					foreach( $paths as $path ){

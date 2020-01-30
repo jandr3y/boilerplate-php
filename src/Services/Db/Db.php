@@ -23,14 +23,16 @@ class Db {
    */
   private $logger;
 
+  public $hidden;
+
 	
-	public function __construct($db, $table, $model){
+	public function __construct($db, $table, $model, $hidden = null){
 		
 		$this->db = $db;
 		
 		$this->table = $table;
-		
-    $this->model = $model;
+		$this->hidden = $hidden;
+        $this->model = $model;
     
     $loggerPath = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../../../logs/db.log';
 		$this->logger = new \Monolog\Logger('DbLog');
@@ -76,16 +78,16 @@ class Db {
    * @param int $limit | Limitador de busca
    * @return stdClass Objeto buscado
    */
-	public function find(Array $where = [], $limit = null){
+	public function find(Array $where = [], $config = []){
     
-    $where = $this->getWhereCondition( $where );
+        $where = $this->getWhereCondition( $where );
     
 		$sql = "select * from {$this->table} {$where->query}";
 		
 		
 		if(isset($limit)){
-      $sql .= "limit {$limit}";
-    }
+            $sql .= "limit {$limit}";
+        }
     
     try {
 
@@ -93,7 +95,21 @@ class Db {
       
       $smtp->execute( $where->params );
       
-      return $smtp->fetchAll();
+      $result = $smtp->fetchAll();
+      $finalArray = [];
+
+
+      foreach( $result as $row ) {
+          $finalArray[] = array_filter($row, function($element) use ($config)  {
+              if ( is_array($config['hidden']) && !is_bool(array_search($element, $config['hidden'])) ) {
+                  return false;
+              }else{
+                  return true;
+              }
+          }, ARRAY_FILTER_USE_KEY);
+      }
+
+      return $finalArray;
     
     }catch(\PDOException $e){
 
@@ -141,5 +157,15 @@ class Db {
       return false;
     }
 
+  }
+
+  public static function getFriendlyMessage(\Exception $e)
+  {
+
+      $arr_uk = explode('uk-', $e->getMessage());
+
+      if ( count($arr_uk) > 1 ) {
+          return "O campo " . substr($arr_uk[1], 0, -1) . " ja esta sendo utilizado";
+      }
   }
 }
